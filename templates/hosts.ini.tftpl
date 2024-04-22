@@ -1,0 +1,33 @@
+[lb]
+${
+  join("\n", [
+    for node in LB_NODES :
+      format("%s ansible_host=%s", node.name, node.ip)
+  ])
+}
+
+[lb:vars]
+lb_vip = ${ LB_VIP }
+
+[rke_master]
+${
+  join("\n", [
+    for node in RKE_MASTER_NODES :
+      format("%s ansible_host=%s", node.name, node.ip)
+  ])
+}
+
+[rke_worker]
+${
+  join("\n", [
+    for node in RKE_WORKER_NODES :
+      format("%s ansible_host=%s", node.name, node.ip)
+  ])
+}
+
+[rke:children]
+rke_master
+rke_worker
+
+[all:vars]
+kubeconfig = ${ KUBECONFIG }

@@ -1,0 +1,49 @@
+---
+- name: Add docker apt gpg key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    keyring: /etc/apt/keyrings/docker.gpg
+
+- name: Add docker apt repository
+  ansible.builtin.apt_repository:
+    repo: >
+      deb [arch={{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }} signed-by=/etc/apt/keyrings/docker.gpg]
+      https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    filename: docker
+    update_cache: true
+
+- name: Install docker packages
+  ansible.builtin.apt:
+    name:
+    - docker-ce=5:23.0.6-1~ubuntu.22.04~{{ ansible_distribution_release }}
+    - docker-buildx-plugin
+    - docker-compose-plugin
+
+- name: Hold docker apt package to prevent upgrades
+  ansible.builtin.dpkg_selections:
+    name: docker-ce
+    selection: hold
+
+- name: Copy docker daemon configuration
+  ansible.builtin.copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+  notify: Restart docker service
+
+- name: Enable docker service
+  ansible.builtin.systemd_service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Add admin user to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Schedule unused docker data deletion
+  ansible.builtin.cron:
+    name: hourly docker system prune
+    job: docker system prune -f
+    special_time: hourly

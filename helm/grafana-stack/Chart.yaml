@@ -1,0 +1,25 @@
+apiVersion: v2
+name: grafana-stack
+description: >
+  Chart to deploy Grafana observability stack services and their CRDs,
+  including Prometheus, Grafana, Loki, Tempo and Promtail.
+type: application
+version: 0.1.0
+dependencies:
+- name: opentelemetry-operator
+  alias: otlp
+  version: 0.52.4
+  repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+- alias: prometheus
+  name: kube-prometheus-stack
+  version: 54.2.2
+  repository: https://prometheus-community.github.io/helm-charts
+- name: loki
+  version: 5.42.2
+  repository: https://grafana.github.io/helm-charts
+- name: tempo
+  version: 1.7.1
+  repository: https://grafana.github.io/helm-charts
+- name: promtail
+  version: 6.15.5
+  repository: https://grafana.github.io/helm-charts

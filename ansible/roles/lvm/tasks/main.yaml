@@ -1,0 +1,39 @@
+---
+- name: Create data directory
+  ansible.builtin.file:
+    path: /data
+    state: directory
+
+- name: Discover unused block devices
+  no_log: true
+  ansible.builtin.set_fact:
+    disks: "{{ disks | default([]) + ['/dev/' + item.key] }}"
+  when: item.key | ansible.builtin.regex_search ("vd[^a]")
+  with_dict: "{{ ansible_devices }}"
+
+- name: Create volume group
+  community.general.lvg:
+    vg: data-vg
+    pvs: "{{ disks | join(',') }}"
+    pvresize: true
+  when: disks is defined
+
+- name: Create logical volume
+  community.general.lvol:
+    vg: data-vg
+    lv: data-lv
+    size: 100%VG
+    resizefs: true
+
+- name: Format logical volume with ext4 filesystem
+  community.general.filesystem:
+    dev: /dev/data-vg/data-lv
+    fstype: ext4
+
+- name: Mount logical volume on data directory
+  ansible.posix.mount:
+    src: /dev/data-vg/data-lv
+    path: /data
+    fstype: ext4
+    opts: defaults
+    state: mounted

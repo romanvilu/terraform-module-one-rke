@@ -1,0 +1,31 @@
+---
+- name: Wait for hosts to be reachable
+  ansible.builtin.wait_for_connection:
+    timeout: 300
+
+- name: Gather hosts facts
+  ansible.builtin.setup:
+
+- name: Update apt cache and dist-upgrade packages
+  ansible.builtin.apt:
+    upgrade: dist
+    update_cache: true
+    cache_valid_time: 86400
+
+- name: Install required apt packages
+  ansible.builtin.apt:
+    name:
+    - cron
+    - gnupg
+    - ca-certificates
+    - apt-transport-https
+    - software-properties-common
+    state: latest
+
+- name: Add hosts entries to hosts file
+  ansible.builtin.lineinfile:
+    dest: /etc/hosts
+    regexp: ".*{{ item }}$"
+    line: "{{ hostvars[item].ansible_host }} {{ item }}"
+  when: hostvars[item].ansible_host is defined
+  with_items: "{{ groups.all }}"

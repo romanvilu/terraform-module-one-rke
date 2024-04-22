@@ -1,0 +1,22 @@
+kubernetes-dashboard:
+  image:
+    repository: ""
+  ingress:
+    # Enables ingress
+    enabled: true
+    # Configures ingress hostnames
+    hosts:
+    - ""
+    tls:
+    # Configures name of Secret to use for ingress TLS termination
+    - secretName: ""
+      # Configures hostnames covered with TLS certificate
+      hosts:
+      - ""
+    annotations:
+      # Configures ClusterIssuer to obtain TLS certificate
+      cert-manager.io/cluster-issuer: sectigo
+      forecastle.stakater.com/expose: "true"
+      forecastle.stakater.com/group: management
+      forecastle.stakater.com/appName: Kubernetes Dashboard
+      forecastle.stakater.com/icon: https://github.com/stakater/ForecastleIcons/raw/master/kubernetes.png

@@ -1,0 +1,23 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: Instrumentation
+metadata:
+  name: java
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "1000"
+spec:
+  exporter:
+    endpoint: http://java-collector.{{ .Release.Namespace }}:4318
+  propagators:
+  - tracecontext
+  - baggage
+  sampler:
+    type: always_on
+  java:
+    env:
+    - name: OTEL_METRICS_EXPORTER
+      value: none
+    - name: OTEL_LOGS_EXPORTER
+      value: none
+    image: ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:2.1.0

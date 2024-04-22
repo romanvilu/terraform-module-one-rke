@@ -1,0 +1,319 @@
+global:
+  nginxExporter:
+    # Configure Prometheus NGINX Exporter endpoints
+    endpoints: []
+  keepalivedExporter:
+    # Configure Prometheus Keepalived Exporter endpoints
+    endpoints: []
+  etcd:
+    # Configures etcd CA certificate for Prometheus
+    caCrt: ""
+    # Configures etcd client certificate for Prometheus
+    clientCert: ""
+    # Configures etcd client key for Prometheus
+    clientKey: ""
+prometheus:
+  # Overrides Prometheus release's computed fullname
+  fullnameOverride: prometheus
+  # Uses more clear Prometheus Operator object names
+  cleanPrometheusOperatorObjectNames: true
+  alertmanager:
+    # Overrides Alertmanager release's computed fullname
+    fullnameOverride: alertmanager
+  prometheus:
+    prometheusSpec:
+      # Makes Prometheus match all PodMonitors
+      podMonitorSelectorNilUsesHelmValues: false
+      # Makes Prometheus match all ServiceMonitors
+      serviceMonitorSelectorNilUsesHelmValues: false
+      # Make Prometheus match ServiceMonitors from all namespaces
+      serviceMonitorNamespaceSelector: {}
+      # ScrapeConfigs for NGINX and Keepalived
+      additionalScrapeConfigsSecret:
+        # Enables additional ScrapeConfigs
+        enabled: true
+        # Configures name of Secret containing additional scrape configs
+        name: scrape-configs
+        # Configures key of Secret containing additional scrape configs
+        key: scrape-configs
+      storageSpec:
+        # Configures spec for Prometheus StatefulSet volume claim template
+        # https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#volume-claim-templates
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+            - ReadWriteOnce
+            resources:
+              requests:
+                storage: 50Gi
+          selector: {}
+      # Configures names of Secrets containing etcd client certificates
+      secrets:
+      - etcd-certs
+  defaultRules:
+    # Enables default PrometheusRules
+    create: true
+    rules:
+      # Disables Windows PrometheusRules
+      windows: false
+  nodeExporter:
+    # Enables Node Exporter
+    enabled: true
+    operatingSystems:
+      linux:
+        # Enables Linux node exporter
+        enabled: true
+      darwin:
+        # Disables Darwin node exporter
+        enabled: false
+  prometheus-node-exporter:
+    # Overrides Prometheus Node Exporter release's computed fullname
+    fullnameOverride: prometheus-node-exporter
+    tolerations:
+    - effect: NoSchedule
+      operator: Exists
+    - key: CriticalAddonsOnly
+      operator: Exists
+    - effect: NoExecute
+      operator: Exists
+  kube-state-metrics:
+    # Overrides kube-state-metrics release's computed fullname
+    fullnameOverride: kube-state-metrics
+  grafana:
+    # Enables Grafana release
+    enabled: true
+    image:
+      registry: ""
+    # Overrides Grafana releases' computed fullname
+    fullnameOverride: grafana
+    # https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources
+    additionalDataSources:
+    # Configures Loki datasource
+    - name: Loki
+      uid: loki
+      type: loki
+      url: http://loki-gateway/
+      orgId: 1
+      isDefault: false
+    # Configures Tempo datasource
+    - name: Tempo
+      uid: tempo
+      type: tempo
+      url: http://tempo:3100/
+      isDefault: false
+      jsonData:
+        tracesToLogsV2:
+          datasourceUid: loki
+        lokiSearch:
+          datasourceUid: loki
+        tracesToMetrics:
+          datasourceUid: prometheus
+        serviceMap:
+          datasourceUid: prometheus
+    ingress:
+      # Enables Grafana ingress
+      enabled: true
+      # Configures ingress hostnames
+      hosts:
+      - ""
+      tls:
+      # Configures name of Secret to use for ingress TLS termination
+      - secretName: ""
+        # Configures hostnames covered with TLS certificate
+        hosts:
+        - ""
+      annotations:
+        # Configures ClusterIssuer to obtain TLS certificate
+        cert-manager.io/cluster-issuer: sectigo
+        forecastle.stakater.com/expose: "true"
+        forecastle.stakater.com/group: management
+        forecastle.stakater.com/appName: Grafana
+        forecastle.stakater.com/icon: https://github.com/stakater/ForecastleIcons/raw/master/grafana.png
+    # Configures Grafana UI administrator's username
+    adminUser: ""
+    # Configures Grafana UI administrator's password
+    adminPassword: ""
+  kubeControllerManager:
+    # Enables Kubernetes controller manager monitoring
+    enabled: true
+    # Configures Kubernetes controller manager endpoints
+    endpoints: []
+  kubeEtcd:
+    # Enables Kubernetes etcd monitoring
+    enabled: true
+    # Configures Kubernetes etcd endpoints
+    endpoints: []
+    service:
+      # Configures port of etcd service created by Prometheus
+      port: 2379
+      # Configures target port of etcd service created by Prometheus
+      targetPort: 2379
+    serviceMonitor:
+      # Enabled Kubernetes etcd ServiceMonitor
+      enabled: true
+      # Configures HTTPS for use to communicate with etcd
+      scheme: https
+      # Configures etcd CA certificate from Secret used in prometheus.prometheus.prometheusSpec.secrets
+      caFile: /etc/prometheus/secrets/etcd-certs/ca.crt
+      # Configures etcd client certificate from Secret used in prometheus.prometheus.prometheusSpec.secrets
+      certFile: /etc/prometheus/secrets/etcd-certs/client.crt
+      # Configures etcd client key from Secret used in prometheus.prometheus.prometheusSpec.secrets
+      keyFile: /etc/prometheus/secrets/etcd-certs/client.key
+  kubeScheduler:
+    # Enables Kubernetes scheduler monitoring
+    enabled: true
+    # Configures Kubernetes scheduler endpoints
+    endpoints: []
+  kubeProxy:
+    # Enables Kubernetes proxy monitoring
+    enabled: true
+    # Configures Kubernetes proxy endpoints
+    endpoints: []
+  coreDns:
+    # Enables Kubernetes CoreDNS monitoring
+    enabled: true
+    service:
+      selector:
+        # Configures CoreDNS release's label
+        k8s-app: coredns
+loki:
+  global:
+    # Configures Kubernetes service discovery service name
+    dnsService: coredns
+    image:
+      # Configures URL of private image registry
+      registry: ""
+  # Overrides Loki release's computed fullname
+  fullnameOverride: loki
+  sidecar:
+    image:
+      repository: ""
+  minio:
+    # Enables MinIO object storage for Loki
+    enabled: true
+    # Configures MinIO standalone mode
+    mode: standalone
+    # Overrides MinIO release's computed fullname
+    fullnameOverride: loki-minio
+    # Configures MinIO console UI administrator's username
+    rootUser: ""
+    # Configures MinIO console UI administrator's password
+    rootPassword: ""
+    persistence:
+      # Configures MinIO persistent volume size
+      size: 200Gi
+    consoleIngress:
+      # Enabled MinIO console ingress
+      enabled: true
+      annotations:
+        # Configures ClusterIssuer to obtain TLS certificate
+        cert-manager.io/cluster-issuer: sectigo
+        forecastle.stakater.com/expose: "true"
+        forecastle.stakater.com/group: management
+        forecastle.stakater.com/appName: Loki MinIO
+        forecastle.stakater.com/icon: https://github.com/stakater/ForecastleIcons/raw/master/minio.png
+      # Configures ingress hostnames
+      hosts:
+      - ""
+      tls:
+      # Configures name of Secret to use for ingress TLS termination
+      - secretName: ""
+        # Configures hostnames covered with TLS certificate
+        hosts:
+        - ""
+  extraObjects:
+  - apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: loki-minio-make-bucket-job
+      namespace: grafana-system
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - command:
+            - /bin/sh
+            - /config/initialize
+            env:
+            - name: MINIO_ENDPOINT
+              value: loki-minio
+            - name: MINIO_PORT
+              value: "9000"
+            image: quay.io/minio/mc:RELEASE.2022-09-16T09-16-47Z
+            name: minio-mc
+            volumeMounts:
+            - mountPath: /config
+              name: minio-configuration
+          volumes:
+          - name: minio-configuration
+            projected:
+              defaultMode: 420
+              sources:
+              - configMap:
+                  name: loki-minio
+              - secret:
+                  name: loki-minio
+  test:
+    # Disables testing mode
+    enabled: false
+  loki:
+    # Disables authentication to Loki
+    compactor:
+      retention_enabled: true
+    auth_enabled: false
+    limits_config:
+      retention_period: 336h
+  backend:
+    # Configures Loki backend Pod count
+    replicas: 2
+  write:
+    # Configures Loki write Pod count
+    replicas: 2
+  gateway:
+    # Configures Loki gateway Pod count
+    replicas: 2
+  read:
+    # Configures Loki read Pod count
+    replicas: 2
+  monitoring:
+    selfMonitoring:
+      # Disables self-monitoring
+      enabled: false
+      grafanaAgent:
+        # Disables Grafana Agent Operator
+        installOperator: false
+    serviceMonitor:
+      # Enables ServiceMonitor
+      enabled: true
+tempo:
+  # Overrides Tempo release's computed fullname
+  fullnameOverride: tempo
+  persistence:
+    # Enables Tempo persistent volumes
+    enabled: true
+  tempo:
+    # Configures URL of private image registry
+    repository: ""
+otlp:
+  fullnameOverride: opentelemetry-operator
+  admissionWebhooks:
+    timeoutSeconds: 30
+    failurePolicy: Ignore
+    certManager:
+      enabled: false
+    autoGenerateCert:
+      recreate: false
+promtail:
+  # Overrides Promtail release's computed fullname
+  fullnameOverride: promtail
+  global:
+    # Configures URL of private image registry
+    imageRegistry: ""
+  tolerations:
+  - effect: NoSchedule
+    operator: Exists
+  - key: CriticalAddonsOnly
+    operator: Exists
+  - effect: NoExecute
+    operator: Exists

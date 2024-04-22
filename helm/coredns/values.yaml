@@ -1,0 +1,12 @@
+coredns:
+  # Overrides CoreDNS release's computed fullname
+  fullnameOverride: coredns
+  image:
+    repository: ""
+  # Configures Pod count
+  replicaCount: 2
+  # Configures CoreDNS to be deployd as cluster service discovery
+  isClusterService: true
+  service:
+    # Configures static clusterIP for CoreDNS service
+    clusterIP: ""

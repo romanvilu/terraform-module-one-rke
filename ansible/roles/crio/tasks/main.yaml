@@ -1,0 +1,40 @@
+---
+- name: Add libcontainers apt gpg key
+  ansible.builtin.apt_key:
+    url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_22.04/Release.key
+    keyring: /usr/share/keyrings/libcontainers-archive-keyring.gpg
+
+- name: Add crio apt gpg key
+  ansible.builtin.apt_key:
+    url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.26/xUbuntu_22.04/Release.key
+    keyring: /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
+
+- name: Add libcontainers apt repository
+  ansible.builtin.apt_repository:
+    repo: >
+      deb [signed-by=/usr/share/keyrings/libcontainers-archive-keyring.gpg]
+      https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_22.04/ /
+    filename: devel:kubic:libcontainers:stable
+    update_cache: true
+
+- name: Add crio apt repository
+  ansible.builtin.apt_repository:
+    repo: >
+      deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg]
+      https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.26/xUbuntu_22.04/ /
+    filename: devel:kubic:libcontainers:stable:cri-o:1.26
+    update_cache: true
+
+- name: Install crio packages
+  ansible.builtin.apt:
+    name:
+    - cri-o
+    - cri-o-runc
+    - containernetworking-plugins
+    - cri-tools
+
+- name: Enabled crio service
+  ansible.builtin.systemd_service:
+    name: crio
+    state: started
+    enabled: true

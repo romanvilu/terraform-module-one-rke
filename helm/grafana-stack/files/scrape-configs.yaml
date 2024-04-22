@@ -1,0 +1,8 @@
+- job_name: nginx
+  static_configs:
+  - targets:
+    {{- .Values.global.nginxExporter.endpoints | toYaml | nindent 4 }}
+- job_name: keepalived
+  static_configs:
+  - targets:
+    {{- .Values.global.keepalivedExporter.endpoints | toYaml | nindent 4 }}

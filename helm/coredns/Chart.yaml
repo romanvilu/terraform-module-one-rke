@@ -1,0 +1,9 @@
+apiVersion: v2
+name: coredns
+description: Chart to deploy CoreDNS as cluster service discovery
+type: application
+version: 0.1.0
+dependencies:
+- name: coredns
+  version: 1.28.2
+  repository: https://coredns.github.io/helm

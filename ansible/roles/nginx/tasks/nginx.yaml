@@ -1,0 +1,34 @@
+---
+- name: Install apt packages
+  ansible.builtin.apt:
+    name: nginx=1.18.*
+
+- name: Copy configuration file
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf.tmp
+    mode: 0640
+
+- name: Test configuration
+  ansible.builtin.shell:
+    cmd: nginx -t -c /etc/nginx/nginx.conf.tmp
+  ignore_errors: true
+  register: test_config
+
+- name: Apply configuration if test succeeded
+  ansible.builtin.copy:
+    src: /etc/nginx/nginx.conf.tmp
+    dest: /etc/nginx/nginx.conf
+    remote_src: true
+  when: not test_config.failed
+
+- name: Remove temporary configuration file
+  ansible.builtin.file:
+    path: /etc/nginx/nginx.conf.tmp
+    state: absent
+
+- name: Enable nginx service
+  ansible.builtin.systemd_service:
+    name: nginx
+    state: restarted
+    enabled: true

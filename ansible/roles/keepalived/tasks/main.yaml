@@ -1,0 +1,8 @@
+---
+- name: Setup keepalived service
+  ansible.builtin.import_tasks:
+    file: keepalived.yaml
+
+- name: Setup keepalived exporter service
+  ansible.builtin.import_tasks:
+    file: keepalived_exporter.yaml

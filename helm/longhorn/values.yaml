@@ -1,0 +1,63 @@
+longhorn:
+  defaultSettings:
+    # Configures default data directory path on Kubernetes worker
+    defaultDataPath: /data
+    # Allows Longhorn uninstallation
+    deletingConfirmationFlag: true
+    # Configures reserved storage percentage
+    storageReservedPercentageForDefaultDisk: 10
+    # Configures backup target location
+    backupTarget: ""
+    # Configures credentials to access backup target
+    backupTargetCredentialSecret: backup-target
+    # Enables StatefulSet and Deployment pods deletion from failed node to enable volume reattachment
+    nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+    # Configures default volume replica count
+    defaultReplicaCount: 2
+  privateRegistry:
+    # Configures URL of private image registry
+    registryUrl: ""
+  ingress:
+    # Enables Longhorn ingress
+    enabled: true
+    # Configures ingress hostname
+    host: ""
+    # Configures ingress path
+    path: /
+    # Enables ingress TLS termination
+    tls: true
+    # Configures TLS certificate Secret name
+    tlsSecret: ""
+    # Enables secure connection to Longhorn UI
+    secureBackends: true
+    annotations:
+      # Configures ClusterIssuer to obtain TLS certificate
+      cert-manager.io/cluster-issuer: sectigo
+      # Configures body size for file uploading, e.g. backing image
+      nginx.ingress.kubernetes.io/proxy-body-size: 10000m
+      # Configures basic authentication type
+      nginx.ingress.kubernetes.io/auth-type: basic
+      # Configures name of Secret containing username and password
+      nginx.ingress.kubernetes.io/auth-secret: basic-auth
+      # Configures to display with appropriate context why authentication is required
+      nginx.ingress.kubernetes.io/auth-realm: "Authentication Required "
+      forecastle.stakater.com/expose: "true"
+      forecastle.stakater.com/group: management
+      forecastle.stakater.com/appName: Longhorn
+      forecastle.stakater.com/icon: https://longhorn.io/img/logos/longhorn-icon-color.png
+  longhornUI:
+    auth:
+      # Configures Longhorn UI basic authentication username
+      adminUser: ""
+      # Configures Longhorn UI basic authentication password
+      adminPassword: ""
+  longhornManager:
+    s3:
+      # Configures S3 service endpoint
+      endpoint: ""
+      # Configures access key ID to access S3
+      accessKeyId: ""
+      # Configures secret access key to access S3
+      secretAccessKey: ""
+  persistence:
+    defaultClassReplicaCount: 2

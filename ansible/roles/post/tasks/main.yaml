@@ -1,0 +1,14 @@
+---
+- name: Remove obsolete apt packages
+  ansible.builtin.apt:
+    autoremove: true
+    autoclean: true
+
+- name: Check if reboot file exists
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+  register: reboot_file
+
+- name: Reboot server if reboot file exists
+  ansible.builtin.reboot:
+  when: reboot_file.stat.exists

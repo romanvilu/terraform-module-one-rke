@@ -1,0 +1,32 @@
+---
+- name: Initialize all hosts
+  hosts: all
+  roles:
+  - role: init
+  tags: init
+
+- name: Configure rke hosts
+  hosts: rke
+  roles:
+  - role: swap
+  - role: docker
+  - role: crio
+  - role: lvm
+    when: inventory_hostname in groups["rke_worker"]
+  tags:
+  - rke
+
+- name: Configure lb hosts
+  hosts: lb
+  roles:
+  - role: nginx
+  - role: keepalived
+  tags:
+  - lb
+
+- name: Post-configure all hosts
+  hosts: all
+  roles:
+  - role: post
+  tags:
+  - post

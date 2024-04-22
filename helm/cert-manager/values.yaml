@@ -1,0 +1,19 @@
+global:
+  # Configures ACME-type ClusterIssuer
+  # https://cert-manager.io/docs/configuration/acme/#external-account-bindings
+  clusterIssuers:
+    acme:
+      # Configures email for notifications
+      email: ""
+      # Configures ACME server address
+      server: ""
+      # Configures ACME account key ID
+      hmacKeyId: ""
+      # Configures ACME accounts key secret
+      hmacKeySecret: ""
+cert-manager:
+  # Enables cert-manager CRDs installation
+  installCRDs: true
+  startupapicheck:
+    # Configures startup API check timeout
+    timeout: 5m

@@ -1,0 +1,8 @@
+---
+- name: Setup nginx service
+  ansible.builtin.import_tasks:
+    file: nginx.yaml
+
+- name: Setup nginx exporter service
+  ansible.builtin.import_tasks:
+    file: nginx_exporter.yaml

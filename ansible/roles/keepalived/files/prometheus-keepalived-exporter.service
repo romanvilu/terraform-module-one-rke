@@ -1,0 +1,12 @@
+[Unit]
+Description=Keepalived Prometheus Exporter
+Documentation=https://github.com/mehdy/keepalived-exporter man:keepalived-exporter(1)
+After=network.target keepalived.service
+
+[Service]
+Restart=on-failure
+User=prometheus
+ExecStart=/usr/bin/prometheus-keepalived-exporter $ARGS
+
+[Install]
+WantedBy=multi-user.target

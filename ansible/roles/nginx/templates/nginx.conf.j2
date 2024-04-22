@@ -1,0 +1,67 @@
+load_module   modules/ngx_stream_module.so;
+
+user                www-data;
+pid                 /run/nginx.pid;
+worker_processes    auto;
+
+error_log   /var/log/nginx/error.log;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    server {
+        listen  127.0.0.1:8080;
+
+        location = /stub_status {
+            stub_status   on;
+        }
+    }
+}
+
+stream {
+    proxy_buffer_size       64k;
+    proxy_timeout           3s;
+    proxy_connect_timeout   1s;
+
+    upstream kube_apiserver {
+        least_conn;
+
+        {{
+          groups["rke_master"]
+          | map("regex_replace", "^", "server  ")
+          | map("regex_replace", "$", ":6443;")
+          | join("\n")
+          | indent(8)
+        }}
+    }
+
+    upstream ingress_controller {
+        least_conn;
+
+        {{
+          groups["rke_worker"]
+          | map("regex_replace", "^", "server  ")
+          | map("regex_replace", "$", ":30443;")
+          | join("\n")
+          | indent(8)
+        }}
+    }
+
+    server {
+        listen          6443;
+        proxy_pass      kube_apiserver;
+        proxy_timeout   60s;
+    }
+
+    server {
+        listen      443;
+        proxy_pass  ingress_controller;
+    }
+
+    server {
+        listen      80;
+        proxy_pass  ingress_controller;
+    }
+}

@@ -1,0 +1,33 @@
+ingress-nginx:
+  controller:
+    # Configures Ingress Controller to be deployed as Deployment
+    kind: Deployment
+    # Configured Pod count
+    admissionWebhooks:
+      # Disables admission webhooks
+      enabled: false
+    service:
+      # Enable Ingress Controller Service
+      enabled: true
+      # Configures external traffic policy
+      externalTrafficPolicy: Local
+      # Configures LoadBalancer-type Service for Ingress Controller
+      type: LoadBalancer
+      # Disables HTTP on target port
+      enableHttp: false
+      # Enables HTTP on target port
+      enableHttps: true
+      nodePorts:
+        # Configures NodePort for Service
+        https: 30443
+      # Configures external IP addresses for LoadBalancers
+      externalIPs:
+      - ""
+    config:
+      # Enables HSTS
+      hsts: true
+      # Enables HSTS also for subdomains
+      hsts-include-subdomains: true
+    ingressClassResource:
+      # Configures IngressClass as default
+      default: true
