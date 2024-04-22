@@ -216,32 +216,32 @@ Required versions of Terraform and used providers (from `versions.tf` file).
 List of resources that the module may (!) create (from `main.tf` file).
 See more about Terraform [resources](https://developer.hashicorp.com/terraform/language/resources/syntax).
 
-| Name                                  | Type        | Description                                                   |
-|---------------------------------------|-------------|---------------------------------------------------------------|
-| random_pet.this                       | resource    | Administrator's random username                               |
-| random_password.this                  | resource    | Administrator's random password                               |
-| tls_private_key.this                  | resource    | Administrator's SSH key pair                                  |
-| local_sensitive_file.id_rsa           | resource    | Contains SSH private key                                      |
-| local_sensitive_file.password         | resource    | Contains administrator's username and password                |
-| opennebula_template.this              | resource    | Virtual machine template                                      |
-| opennebula_virtual_machine.rke_master | resource    | RKE master host                                               |
-| opennebula_virtual_machine.rke_worker | resource    | RKE worker host                                               |
-| opennebula_virtual_machine.lb         | resource    | Load balancing host                                           |
-| local_file.hosts                      | resource    | Ansible inventory file                                        |                       
-| terraform_data.playbook               | resource    | Ansible playbook execution                                    | 
-| rke_cluster.this                      | resource    | RKE cluster                                                   |
-| local_file.kubeconfig                 | resource    | Kubeconfig file                                               |
-| helm_release.cert_manager             | resource    | cert-manager Helm release                                     |
-| helm_release.coredns                  | resource    | CoreDNS Helm release                                          |
-| helm_release.ingress_nginx            | resource    | NGINX Ingress Controller Helm release                         |
-| helm_release.longhorn                 | resource    | Longhorn Helm release                                         |
-| helm_release.grafana_stack            | resource    | Grafana Stack (Prometheus, Grafana, Loki, Tempo) Helm release |
-| helm_release.kubernetes_dashboard     | resource    | Kubernetes Dashboard Helm release                             |
-| opennebula_image.this                 | data source | Ubuntu 22.04 LTS minimal image                                |
-| opennebula_group.this                 | data source | Owner group for OpenNebula resources                          |
-| opennebula_virtual_network.this       | data source | Virtual network for virtual machines                          |
-| local_file.hosts_template             | data source | Ansible inventor  template                                    |
-| local_file.kubeconfig_template        | data source | Kubeconfig template                                           |
+| Name                                  | Type        | Description                                                                                     |
+|---------------------------------------|-------------|-------------------------------------------------------------------------------------------------|
+| random_pet.this                       | resource    | Administrator's random username                                                                 |
+| random_password.this                  | resource    | Administrator's random password                                                                 |
+| tls_private_key.this                  | resource    | Administrator's SSH key pair                                                                    |
+| local_sensitive_file.id_rsa           | resource    | Contains SSH private key                                                                        |
+| local_sensitive_file.password         | resource    | Contains administrator's username and password                                                  |
+| opennebula_template.this              | resource    | Virtual machine template                                                                        |
+| opennebula_virtual_machine.rke_master | resource    | RKE master host                                                                                 |
+| opennebula_virtual_machine.rke_worker | resource    | RKE worker host                                                                                 |
+| opennebula_virtual_machine.lb         | resource    | Load balancing host                                                                             |
+| local_file.hosts                      | resource    | Ansible inventory file                                                                          |                       
+| terraform_data.playbook               | resource    | Ansible playbook execution                                                                      | 
+| rke_cluster.this                      | resource    | RKE cluster                                                                                     |
+| local_file.kubeconfig                 | resource    | Kubeconfig file                                                                                 |
+| helm_release.cert_manager             | resource    | cert-manager Helm release                                                                       |
+| helm_release.coredns                  | resource    | CoreDNS Helm release                                                                            |
+| helm_release.ingress_nginx            | resource    | NGINX Ingress Controller Helm release                                                           |
+| helm_release.longhorn                 | resource    | Longhorn Helm release                                                                           |
+| helm_release.grafana_stack            | resource    | Grafana Stack (Prometheus, Grafana, Loki, Tempo, OpenTelemetry Operator, Promtail) Helm release |
+| helm_release.kubernetes_dashboard     | resource    | Kubernetes Dashboard Helm release                                                               |
+| opennebula_image.this                 | data source | Ubuntu 22.04 LTS minimal image                                                                  |
+| opennebula_group.this                 | data source | Owner group for OpenNebula resources                                                            |
+| opennebula_virtual_network.this       | data source | Virtual network for virtual machines                                                            |
+| local_file.hosts_template             | data source | Ansible inventor  template                                                                      |
+| local_file.kubeconfig_template        | data source | Kubeconfig template                                                                             |
 
 ## Inputs
 List of values that the module may use (i.e. both optional and required ones).
@@ -310,27 +310,21 @@ See more about Terraform [output values](https://developer.hashicorp.com/terrafo
 | cluster_config_yaml                           | RKE cluster configuration                             |
 | kubeconfig_path                               | kubeconfig absolute file path                         |
 | addons                                        | Information of Kubernetes addons                      |
-| addons.cert_manager                           | cert-manager addon                                    |
-| addons.cert_manager.release_name              | cert-manager addon Helm release name                  |
-| addons.cert_manager.release_namespace         | cert-manager addon Helm release namespace             |
 | addons.coredns                                | CoreDNS addon                                         |
 | addons.coredns.release_name                   | CoreDNS addon Helm release name                       |
 | addons.coredns.release_namespace              | CoreDNS addon Helm release namespace                  |
-| addons.grafana_stack                          | Grafana Stack addon                                   |
-| addons.grafana_stack.release_name             | Grafana Stack addon Helm release name                 |
-| addons.grafana_stack.release_namespace        | Grafana Stack addon Helm release namespace            |
+| addons.cert_manager                           | cert-manager addon                                    |
+| addons.cert_manager.release_name              | cert-manager addon Helm release name                  |
+| addons.cert_manager.release_namespace         | cert-manager addon Helm release namespace             |
 | addons.ingress_nginx                          | NGINX Ingress Controller addon                        |
 | addons.ingress_nginx.release_name             | NGINX Ingress Controller addon Helm release name      |
 | addons.ingress_nginx.release_namespace        | NGINX Ingress Controller addon Helm release namespace |
-| addons.kubernetes_dashboard                   | Kubernetes Dashboard addon                            |
-| addons.kubernetes_dashboard.release_name      | Kubernetes Dashboard addon Helm release name          |
-| addons.kubernetes_dashboard.release_namespace | Kubernetes Dashboard addon Helm release namespace     |
 | addons.longhorn                               | Longhorn addon                                        |
 | addons.longhorn.release_name                  | Longhorn addon Helm release name                      |
 | addons.longhorn.release_namespace             | Longhorn addon Helm release namespace                 |
-| addons.metrics_server                         | Metrics Server addon                                  |
-| addons.metrics_server.release_name            | Metrics Server addon Helm release name                |
-| addons.metrics_server.release_namespace       | Metrics Server  addon Helm release namespace          |
-| addons.tigera_operator                        | Tigera Operator addon                                 |
-| addons.tigera_operator.release_name           | Tigera Operator addon Helm release name               |
-| addons.tigera_operator.release_namespace      | Tigera Operator addon Helm release namespace          |
+| addons.kubernetes_dashboard                   | Kubernetes Dashboard addon                            |
+| addons.kubernetes_dashboard.release_name      | Kubernetes Dashboard addon Helm release name          |
+| addons.kubernetes_dashboard.release_namespace | Kubernetes Dashboard addon Helm release namespace     |
+| addons.grafana_stack                          | Grafana Stack addon                                   |
+| addons.grafana_stack.release_name             | Grafana Stack addon Helm release name                 |
+| addons.grafana_stack.release_namespace        | Grafana Stack addon Helm release namespace            |
