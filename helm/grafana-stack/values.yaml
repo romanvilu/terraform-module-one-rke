@@ -125,6 +125,7 @@ kube-prometheus-stack:
   grafana:
     # Enables Grafana release
     enabled: true
+    fullnameOverride: grafana
     image:
       registry: ""
     # Overrides Grafana releases' computed fullname
