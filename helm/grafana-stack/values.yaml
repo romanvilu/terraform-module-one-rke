@@ -1,22 +1,16 @@
-global:
-  nginxExporter:
-    # Configure Prometheus NGINX Exporter endpoints
 alertmanager:
   basicAuth:
     user: ""
     password: ""
+exporters:
+  nginx:
     endpoints: []
-  keepalivedExporter:
-    # Configure Prometheus Keepalived Exporter endpoints
+  keepalived:
     endpoints: []
-  etcd:
-    # Configures etcd CA certificate for Prometheus
-    caCrt: ""
-    # Configures etcd client certificate for Prometheus
-    clientCert: ""
-    # Configures etcd client key for Prometheus
-    clientKey: ""
-  # Overrides Prometheus release's computed fullname
+etcd:
+  caCrt: ""
+  clientCert: ""
+  clientKey: ""
 kube-prometheus-stack:
   fullnameOverride: prometheus
   # Uses more clear Prometheus Operator object names

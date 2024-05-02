@@ -567,13 +567,13 @@ resource "helm_release" "grafana_stack" {
   dynamic "set_sensitive" {
     for_each = {
       "loki.minio.rootPassword"          = random_password.this.result
-      "global.etcd.caCrt"                = rke_cluster.this.ca_crt
-      "global.etcd.clientKey" = element([
       "alertmanager.basicAuth.password"             = random_password.this.result
       "kube-prometheus-stack.grafana.adminPassword" = random_password.this.result
+      "etcd.caCrt"                                  = rke_cluster.this.ca_crt
+      "etcd.clientKey" = element([
         for c in rke_cluster.this.certificates : c.key if startswith(c.id, "kube-etcd")
       ], 0)
-      "global.etcd.clientCert" = element([
+      "etcd.clientCert" = element([
         for c in rke_cluster.this.certificates : c.certificate if startswith(c.id, "kube-etcd")
       ], 0)
     }
@@ -585,8 +585,8 @@ resource "helm_release" "grafana_stack" {
 
   dynamic "set_list" {
     for_each = {
-      "global.nginxExporter.endpoints"             = formatlist("%s:9113", opennebula_virtual_machine.lb.*.ip)
-      "global.keepalivedExporter.endpoints"        = formatlist("%s:9165", opennebula_virtual_machine.lb.*.ip)
+      "exporters.nginx.endpoints"                             = formatlist("%s:9113", opennebula_virtual_machine.lb.*.ip)
+      "exporters.keepalived.endpoints"                        = formatlist("%s:9165", opennebula_virtual_machine.lb.*.ip)
       "kube-prometheus-stack.kubeControllerManager.endpoints" = opennebula_virtual_machine.rke_master.*.ip
       "kube-prometheus-stack.kubeEtcd.endpoints"              = opennebula_virtual_machine.rke_master.*.ip
       "kube-prometheus-stack.kubeScheduler.endpoints"         = opennebula_virtual_machine.rke_master.*.ip
