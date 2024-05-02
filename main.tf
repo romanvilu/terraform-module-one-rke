@@ -566,8 +566,8 @@ resource "helm_release" "grafana_stack" {
 
   dynamic "set_sensitive" {
     for_each = {
-      "loki.minio.rootPassword"          = random_password.this.result
       "alertmanager.basicAuth.password"             = random_password.this.result
+      "loki.minio.rootPassword"                     = random_password.this.result
       "kube-prometheus-stack.grafana.adminPassword" = random_password.this.result
       "etcd.caCrt"                                  = rke_cluster.this.ca_crt
       "etcd.clientKey" = element([

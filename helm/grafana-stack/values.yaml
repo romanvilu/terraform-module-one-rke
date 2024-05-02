@@ -1,16 +1,42 @@
+# alertmanager (map): Additional Alertmanager configurations.
+##
 alertmanager:
   basicAuth:
     user: ""
     password: ""
+
+# exporters (map): Configuration of additional Prometheus exporters.
+##
 exporters:
+  # nginx (map): Prometheus NGINX Exporter configuration.
+  ##
   nginx:
+    # endpoints (list): Prometheus NGINX Exporter endpoints, incl. IP address and port.
+    # Set by Terraform.
     endpoints: []
+
+  # keepalived (map): Prometheus Keepalived Exporter configuration.
+  ##
   keepalived:
+    # endpoints (list): Prometheus Keepalived Exporter endpoints, incl. IP address and port.
+    # Set by Terraform.
     endpoints: []
+
+# etcd (map): Cluster etcd access configuration.
+##
 etcd:
+  # caCrt (string): CA certificate of etcd signed keypair.
+  # Set by Terraform.
   caCrt: ""
+  # clientCert (string): Client certificate to connect to etcd server.
+  # Set by Terraform.
   clientCert: ""
+  # clientKey (string): etcd client certificate key.
+  # Set by Terraform.
   clientKey: ""
+
+# prometheus (map): Prometheus (alias for kube-prometheus-stack) sub-chart values.
+##
 kube-prometheus-stack:
   fullnameOverride: prometheus
   # Uses more clear Prometheus Operator object names
