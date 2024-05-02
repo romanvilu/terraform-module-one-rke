@@ -540,19 +540,23 @@ resource "helm_release" "grafana_stack" {
 
   dynamic "set" {
     for_each = {
-      "kube-prometheus-stack.grafana.ingress.hosts[0]"          = "grafana.${var.domain}"
-      "kube-prometheus-stack.grafana.ingress.tls[0].hosts[0]"   = "grafana.${var.domain}"
-      "kube-prometheus-stack.grafana.ingress.tls[0].secretName" = "grafana.${var.domain}-tls"
-      "kube-prometheus-stack.grafana.adminUser"                 = random_pet.this.id
-      "kube-prometheus-stack.grafana.image.registry"            = var.image_registry
-      "loki.sidecar.image.repository"                           = "${var.image_registry}/kiwigrid/k8s-sidecar"
-      "loki.minio.consoleIngress.hosts[0]"                      = "loki-minio.${var.domain}"
-      "loki.minio.consoleIngress.tls[0].hosts[0]"               = "loki-minio.${var.domain}"
-      "loki.minio.consoleIngress.tls[0].secretName"             = "loki-minio.${var.domain}-tls"
-      "loki.minio.rootUser"                                     = random_pet.this.id
-      "loki.global.image.registry"                              = var.image_registry
-      "tempo.tempo.repository"                                  = "${var.image_registry}/grafana/tempo"
-      "promtail.global.imageRegistry"                           = var.image_registry
+      "alertmanager.basicAuth.user"                                  = random_pet.this.id
+      "kube-prometheus-stack.alertmanager.ingress.hosts[0]"          = "alertmanager.${var.domain}"
+      "kube-prometheus-stack.alertmanager.ingress.tls[0].hosts[0]"   = "alertmanager.${var.domain}"
+      "kube-prometheus-stack.alertmanager.ingress.tls[0].secretName" = "alertmanager.${var.domain}-tls"
+      "kube-prometheus-stack.grafana.ingress.hosts[0]"               = "grafana.${var.domain}"
+      "kube-prometheus-stack.grafana.ingress.tls[0].hosts[0]"        = "grafana.${var.domain}"
+      "kube-prometheus-stack.grafana.ingress.tls[0].secretName"      = "grafana.${var.domain}-tls"
+      "kube-prometheus-stack.grafana.adminUser"                      = random_pet.this.id
+      "kube-prometheus-stack.grafana.image.registry"                 = var.image_registry
+      "loki.sidecar.image.repository"                                = "${var.image_registry}/kiwigrid/k8s-sidecar"
+      "loki.minio.consoleIngress.hosts[0]"                           = "loki-minio.${var.domain}"
+      "loki.minio.consoleIngress.tls[0].hosts[0]"                    = "loki-minio.${var.domain}"
+      "loki.minio.consoleIngress.tls[0].secretName"                  = "loki-minio.${var.domain}-tls"
+      "loki.minio.rootUser"                                          = random_pet.this.id
+      "loki.global.image.registry"                                   = var.image_registry
+      "tempo.tempo.repository"                                       = "${var.image_registry}/grafana/tempo"
+      "promtail.global.imageRegistry"                                = var.image_registry
     }
     content {
       name  = set.key
@@ -565,6 +569,7 @@ resource "helm_release" "grafana_stack" {
       "loki.minio.rootPassword"          = random_password.this.result
       "global.etcd.caCrt"                = rke_cluster.this.ca_crt
       "global.etcd.clientKey" = element([
+      "alertmanager.basicAuth.password"             = random_password.this.result
       "kube-prometheus-stack.grafana.adminPassword" = random_password.this.result
         for c in rke_cluster.this.certificates : c.key if startswith(c.id, "kube-etcd")
       ], 0)

@@ -1,6 +1,10 @@
 global:
   nginxExporter:
     # Configure Prometheus NGINX Exporter endpoints
+alertmanager:
+  basicAuth:
+    user: ""
+    password: ""
     endpoints: []
   keepalivedExporter:
     # Configure Prometheus Keepalived Exporter endpoints
@@ -20,6 +24,23 @@ kube-prometheus-stack:
   alertmanager:
     # Overrides Alertmanager release's computed fullname
     fullnameOverride: alertmanager
+    ingress:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/auth-type: basic
+        nginx.ingress.kubernetes.io/auth-secret: alertmanager-basic-auth
+        nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+        cert-manager.io/cluster-issuer: sectigo
+        forecastle.stakater.com/expose: "true"
+        forecastle.stakater.com/group: management
+        forecastle.stakater.com/appName: Alertmanager
+        forecastle.stakater.com/icon: https://github.com/stakater/ForecastleIcons/raw/master/alert-manager.png
+      hosts:
+      - ""
+      tls:
+      - secretName: ""
+        hosts:
+        - ""
   prometheus:
     prometheusSpec:
       # Makes Prometheus match all PodMonitors
