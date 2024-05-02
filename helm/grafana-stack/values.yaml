@@ -53,6 +53,7 @@ kube-prometheus-stack:
         cert-manager.io/cluster-issuer: sectigo
         forecastle.stakater.com/expose: "true"
         forecastle.stakater.com/group: management
+        forecastle.stakater.com/group: observability
         forecastle.stakater.com/appName: Alertmanager
         forecastle.stakater.com/icon: https://github.com/stakater/ForecastleIcons/raw/master/alert-manager.png
       hosts:
@@ -168,6 +169,7 @@ kube-prometheus-stack:
         cert-manager.io/cluster-issuer: sectigo
         forecastle.stakater.com/expose: "true"
         forecastle.stakater.com/group: management
+        forecastle.stakater.com/group: observability
         forecastle.stakater.com/appName: Grafana
         forecastle.stakater.com/icon: https://github.com/stakater/ForecastleIcons/raw/master/grafana.png
     # Configures Grafana UI administrator's username
