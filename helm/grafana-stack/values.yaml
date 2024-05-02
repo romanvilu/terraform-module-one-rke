@@ -128,6 +128,8 @@ kube-prometheus-stack:
       registry: ""
     # Overrides Grafana releases' computed fullname
     fullnameOverride: grafana
+    deploymentStrategy:
+      type: Recreate
     persistence:
       enabled: true
       size: 10Gi
