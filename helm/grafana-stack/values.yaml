@@ -255,7 +255,7 @@ loki:
         # Configures ClusterIssuer to obtain TLS certificate
         cert-manager.io/cluster-issuer: sectigo
         forecastle.stakater.com/expose: "true"
-        forecastle.stakater.com/group: management
+        forecastle.stakater.com/group: storage
         forecastle.stakater.com/appName: Loki MinIO
         forecastle.stakater.com/icon: https://github.com/stakater/ForecastleIcons/raw/master/minio.png
       # Configures ingress hostnames
