@@ -163,15 +163,6 @@ kube-prometheus-stack:
     ingress:
       # Enables Grafana ingress
       enabled: true
-      # Configures ingress hostnames
-      hosts:
-      - ""
-      tls:
-      # Configures name of Secret to use for ingress TLS termination
-      - secretName: ""
-        # Configures hostnames covered with TLS certificate
-        hosts:
-        - ""
       annotations:
         # Configures ClusterIssuer to obtain TLS certificate
         cert-manager.io/cluster-issuer: sectigo
@@ -180,6 +171,12 @@ kube-prometheus-stack:
         forecastle.stakater.com/appName: Grafana
         forecastle.stakater.com/icon: https://github.com/stakater/ForecastleIcons/raw/master/grafana.png
     # Configures Grafana UI administrator's username
+      hosts:
+      - ""
+      tls:
+      - secretName: ""
+        hosts:
+        - ""
     adminUser: ""
     # Configures Grafana UI administrator's password
     adminPassword: ""
