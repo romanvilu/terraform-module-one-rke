@@ -341,7 +341,7 @@ tempo:
   tempo:
     # Configures URL of private image registry
     repository: ""
-otlp:
+opentelemetry-operator:
   fullnameOverride: opentelemetry-operator
   admissionWebhooks:
     timeoutSeconds: 30
