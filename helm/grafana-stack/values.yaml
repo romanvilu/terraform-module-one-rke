@@ -234,9 +234,6 @@ loki:
       registry: ""
   # Overrides Loki release's computed fullname
   fullnameOverride: loki
-  sidecar:
-    image:
-      repository: ""
   minio:
     # Enables MinIO object storage for Loki
     enabled: true
