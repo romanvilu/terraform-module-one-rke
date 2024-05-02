@@ -226,6 +226,7 @@ kube-prometheus-stack:
         # Configures CoreDNS release's label
         k8s-app: coredns
 loki:
+  fullnameOverride: loki
   global:
     # Configures Kubernetes service discovery service name
     dnsService: coredns
