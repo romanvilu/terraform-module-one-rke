@@ -12,8 +12,8 @@ global:
     clientCert: ""
     # Configures etcd client key for Prometheus
     clientKey: ""
-prometheus:
   # Overrides Prometheus release's computed fullname
+kube-prometheus-stack:
   fullnameOverride: prometheus
   # Uses more clear Prometheus Operator object names
   cleanPrometheusOperatorObjectNames: true

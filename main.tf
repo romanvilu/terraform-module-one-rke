@@ -540,19 +540,19 @@ resource "helm_release" "grafana_stack" {
 
   dynamic "set" {
     for_each = {
-      "prometheus.grafana.ingress.hosts[0]"          = "grafana.${var.domain}"
-      "prometheus.grafana.ingress.tls[0].hosts[0]"   = "grafana.${var.domain}"
-      "prometheus.grafana.ingress.tls[0].secretName" = "grafana.${var.domain}-tls"
-      "prometheus.grafana.adminUser"                 = random_pet.this.id
-      "prometheus.grafana.image.registry"            = var.image_registry
-      "loki.sidecar.image.repository"                = "${var.image_registry}/kiwigrid/k8s-sidecar"
-      "loki.minio.consoleIngress.hosts[0]"           = "loki-minio.${var.domain}"
-      "loki.minio.consoleIngress.tls[0].hosts[0]"    = "loki-minio.${var.domain}"
-      "loki.minio.consoleIngress.tls[0].secretName"  = "loki-minio.${var.domain}-tls"
-      "loki.minio.rootUser"                          = random_pet.this.id
-      "loki.global.image.registry"                   = var.image_registry
-      "tempo.tempo.repository"                       = "${var.image_registry}/grafana/tempo"
-      "promtail.global.imageRegistry"                = var.image_registry
+      "kube-prometheus-stack.grafana.ingress.hosts[0]"          = "grafana.${var.domain}"
+      "kube-prometheus-stack.grafana.ingress.tls[0].hosts[0]"   = "grafana.${var.domain}"
+      "kube-prometheus-stack.grafana.ingress.tls[0].secretName" = "grafana.${var.domain}-tls"
+      "kube-prometheus-stack.grafana.adminUser"                 = random_pet.this.id
+      "kube-prometheus-stack.grafana.image.registry"            = var.image_registry
+      "loki.sidecar.image.repository"                           = "${var.image_registry}/kiwigrid/k8s-sidecar"
+      "loki.minio.consoleIngress.hosts[0]"                      = "loki-minio.${var.domain}"
+      "loki.minio.consoleIngress.tls[0].hosts[0]"               = "loki-minio.${var.domain}"
+      "loki.minio.consoleIngress.tls[0].secretName"             = "loki-minio.${var.domain}-tls"
+      "loki.minio.rootUser"                                     = random_pet.this.id
+      "loki.global.image.registry"                              = var.image_registry
+      "tempo.tempo.repository"                                  = "${var.image_registry}/grafana/tempo"
+      "promtail.global.imageRegistry"                           = var.image_registry
     }
     content {
       name  = set.key
@@ -563,9 +563,9 @@ resource "helm_release" "grafana_stack" {
   dynamic "set_sensitive" {
     for_each = {
       "loki.minio.rootPassword"          = random_password.this.result
-      "prometheus.grafana.adminPassword" = random_password.this.result
       "global.etcd.caCrt"                = rke_cluster.this.ca_crt
       "global.etcd.clientKey" = element([
+      "kube-prometheus-stack.grafana.adminPassword" = random_password.this.result
         for c in rke_cluster.this.certificates : c.key if startswith(c.id, "kube-etcd")
       ], 0)
       "global.etcd.clientCert" = element([
@@ -582,10 +582,10 @@ resource "helm_release" "grafana_stack" {
     for_each = {
       "global.nginxExporter.endpoints"             = formatlist("%s:9113", opennebula_virtual_machine.lb.*.ip)
       "global.keepalivedExporter.endpoints"        = formatlist("%s:9165", opennebula_virtual_machine.lb.*.ip)
-      "prometheus.kubeControllerManager.endpoints" = opennebula_virtual_machine.rke_master.*.ip
-      "prometheus.kubeEtcd.endpoints"              = opennebula_virtual_machine.rke_master.*.ip
-      "prometheus.kubeScheduler.endpoints"         = opennebula_virtual_machine.rke_master.*.ip
-      "prometheus.kubeProxy.endpoints" = concat(
+      "kube-prometheus-stack.kubeControllerManager.endpoints" = opennebula_virtual_machine.rke_master.*.ip
+      "kube-prometheus-stack.kubeEtcd.endpoints"              = opennebula_virtual_machine.rke_master.*.ip
+      "kube-prometheus-stack.kubeScheduler.endpoints"         = opennebula_virtual_machine.rke_master.*.ip
+      "kube-prometheus-stack.kubeProxy.endpoints" = concat(
         opennebula_virtual_machine.rke_master.*.ip,
         opennebula_virtual_machine.rke_worker.*.ip
       )
