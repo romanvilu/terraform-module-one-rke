@@ -1,8 +1,14 @@
 # alertmanager (map): Additional Alertmanager configurations.
 ##
 alertmanager:
+  # basicAuth (map): Basic authentication values for Alertmanager ingress.
+  ##
   basicAuth:
+    # user (string): Basic authentication username.
+    # Set by Terraform.
     user: ""
+    # password (string): Basic authentication password.
+    # Set by Terraform.
     password: ""
 
 # exporters (map): Configuration of additional Prometheus exporters.
@@ -38,50 +44,101 @@ etcd:
 # prometheus (map): Prometheus (alias for kube-prometheus-stack) sub-chart values.
 ##
 kube-prometheus-stack:
+  # fullnameOverride (string): Override for prefix of Prometheus-related objects.
   fullnameOverride: prometheus
-  # Uses more clear Prometheus Operator object names
+  # cleanPrometheusOperatorObjectNames (bool): Whether to use cleaner names for objects created by Prometheus Operator.
   cleanPrometheusOperatorObjectNames: true
+
+  # alertmanager (map): Alertmanager configuration.
+  ##
   alertmanager:
-    # Overrides Alertmanager release's computed fullname
+    # fullnameOverride (string): Override for prefix of Alertmanager-related objects.
     fullnameOverride: alertmanager
+
+    # ingress (map): Alertmanager Ingress configuration.
+    ##
     ingress:
+      # enabled (bool): Whether to create Ingress.
       enabled: true
+
+      # annotations (map(string)): Ingress annotations.
+      ##
       annotations:
+        # Annotations for ingress controller.
+        ##
+        # Type of authentication used when accessing hostnames configures in ingress.
         nginx.ingress.kubernetes.io/auth-type: basic
+        # Name of secret object which contains authentication credentials.
         nginx.ingress.kubernetes.io/auth-secret: alertmanager-basic-auth
+        # Message to include in HTTP response header.
         nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+
+        # Annotations for cert-manager. More: https://github.com/cert-manager/cert-manager.
+        ##
+        # Cluster issuer name to use for TLS certificate issuing.
         cert-manager.io/cluster-issuer: sectigo
+
+        # Annotations for Forecastle. More: https://github.com/stakater/Forecastle.
+        ##
+        # Whether to display ingress in Forecastle.
         forecastle.stakater.com/expose: "true"
-        forecastle.stakater.com/group: management
+        # Name of group under which ingress is displayed in Forecastle.
         forecastle.stakater.com/group: observability
+        # Override for name under which ingress is displayed in Forecastle.
         forecastle.stakater.com/appName: Alertmanager
+        # URL of icon/image to display with ingress in Forecastle.
         forecastle.stakater.com/icon: https://github.com/stakater/ForecastleIcons/raw/master/alert-manager.png
+
+      # hosts (list(string)): List of ingress hostnames.
+      # Set by Terraform.
       hosts:
       - ""
+
+      # tls (list(map)): TLS configuration for ingress hostnames.
+      ##
       tls:
+      # secretName (string): Name of Secrets to include TLS certificate.
+      # Set by Terraform.
       - secretName: ""
+        # hosts (list(string)): List of hostnames to which TLS certificate applies.
+        # Set by Terraform.
         hosts:
         - ""
+
+  # prometheus (map): Prometheus configuration.
+  ##
   prometheus:
+    # prometheusSpec (map): Prometheus object configuration.
+    ##
     prometheusSpec:
-      # Makes Prometheus match all PodMonitors
+      # enableRemoteWriteReceiver (bool): Whether to enable receiver for remote writes (used by Tempo).
       enableRemoteWriteReceiver: true
+      # podMonitorsSelectorNilUsesHelmValues (bool): Whether to use selectors from Helm values for Prometheus
+      # PodMonitors. If false, Prometheus will match all PodMonitors from all namespaces.
       podMonitorSelectorNilUsesHelmValues: false
-      # Makes Prometheus match all ServiceMonitors
+      # serviceMonitorSelectorNulUsesHelmValues (bool): Whether to use selectors from Helm values for Prometheus
+      # ServiceMonitors. If false, Prometheus will match all ServiceMonitors from all namespaces.
       serviceMonitorSelectorNilUsesHelmValues: false
-      # Make Prometheus match ServiceMonitors from all namespaces
+      # serviceMonitorNamespaceSelector (map): Selectors of namespaces for ServiceMonitors.
+      # If empty, Prometheus will match ServiceMonitors from all namespaces.
       serviceMonitorNamespaceSelector: {}
-      # ScrapeConfigs for NGINX and Keepalived
+
+      # additionalScrapeConfigsSecret (map): Prometheus additional ScrapeConfigs configuration.
+      ##
       additionalScrapeConfigsSecret:
-        # Enables additional ScrapeConfigs
+        # enabled (bool): Whether to enable additional scrape configs.
         enabled: true
-        # Configures name of Secret containing additional scrape configs
+        # name (string): Name of additional scrape configs Secret.
         name: scrape-configs
-        # Configures key of Secret containing additional scrape configs
+        # key (string): Key from Secret which contains scrape configs.
         key: scrape-configs
+
+      # storageSpec (map): Prometheus storage (PVC) configuration.
+      ##
       storageSpec:
-        # Configures spec for Prometheus StatefulSet volume claim template
+        # volumeClaimTemplate (map): Specification for volumeClaimTemplate of Prometheus StatefulSet.
         # https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#volume-claim-templates
+        ##
         volumeClaimTemplate:
           spec:
             accessModes:
@@ -90,28 +147,46 @@ kube-prometheus-stack:
               requests:
                 storage: 50Gi
           selector: {}
-      # Configures names of Secrets containing etcd client certificates
+
+      # secrets (list(string)): Secrets to mount in Prometheus Pods.
       secrets:
+      # Secret containing etcd CA certificate, client key and client certificate.
       - etcd-certs
+
+  # defaultRules (map): Default Prometheus rules configuration.
+  ##
   defaultRules:
-    # Enables default PrometheusRules
+    # create (bool): Whether to enable default rules.
     create: true
+
+    # rules (map(string, bool)): Whether to enable default rules for different services.
+    ##
     rules:
-      # Disables Windows PrometheusRules
+      # windows (bool): Whether to enable default rules for Windows nodes.
       windows: false
+
+  # nodeExporter (map): Prometheus Node Exporter configuration.
+  ##
   nodeExporter:
-    # Enables Node Exporter
+    # enabled (bool): Whether to enable Node Exporter.
     enabled: true
+
     operatingSystems:
       linux:
-        # Enables Linux node exporter
+        # enabled (bool): Whether to enable Node Exporter for Linux.
         enabled: true
       darwin:
-        # Disables Darwin node exporter
+        # enabled (bool): Whether to enable Node Exporter for Darwin.
         enabled: false
+
+  # prometheus-node-exporter (map): Prometheus Node Exporter sub-chart values.
+  ##
   prometheus-node-exporter:
-    # Overrides Prometheus Node Exporter release's computed fullname
+    # fullnameOverride (string): Override for prefix of Prometheus Node Exporter objects.
     fullnameOverride: prometheus-node-exporter
+
+    # tolerations (list(map)): Tolerations for Prometheus Node Exporter Pods.
+    # Tolerations to enable DaemonSet Pods to be scheduled on every Kubernetes node.
     tolerations:
     - effect: NoSchedule
       operator: Exists
@@ -119,180 +194,354 @@ kube-prometheus-stack:
       operator: Exists
     - effect: NoExecute
       operator: Exists
+
+  # kube-state-metrics (map): kube-state-metrics (KMS) sub-chart values.
+  ##
   kube-state-metrics:
-    # Overrides kube-state-metrics release's computed fullname
+    # fullnameOverride (string): Override for names of kube-state-metrics objects.
     fullnameOverride: kube-state-metrics
+
+    # extraArgs (list(string)): Extra arguments for kube-state-metrics Pods.
+    extraArgs:
+    # Enable collection of labels from all Pods.
+    - --metric-labels-allowlist=pods=[*]
+
+  # grafana (map): Grafana sub-chart values.
+  ##
   grafana:
-    # Enables Grafana release
+    # enabled (bool): Whether to enable Grafana deployment.
     enabled: true
+    # fullnameOverride (string): Override for names of Grafana objects.
     fullnameOverride: grafana
+
+    # image (map): Grafana image configuration.
+    ##
     image:
+      # registry (string): URL of image registry (without `https://`).
+      # Set By Terraform.
       registry: ""
-    # Overrides Grafana releases' computed fullname
-    fullnameOverride: grafana
+
     deploymentStrategy:
+      # type (string): Type of Grafana Deployment update. `Recreate` and `RollingUpdate` are supported.
+      # Recreate strategy fixes problem of reattachment of PVC.
       type: Recreate
+
+    # persistence (map): Grafana PVC configuration.
+    ##
     persistence:
+      # enabled (bool): Whether to enable Grafana persistent volume.
       enabled: true
+      # size (string): Size of Grafana persistent volume.
       size: 10Gi
+
+    # additionalDataSources (list(map)): Additional Grafana data sources configuration.
     # https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources
+    ##
     additionalDataSources:
-    # Configures Loki datasource
+    # Loki datasource.
     - name: Loki
       uid: loki
       type: loki
+      # Format: http://<LOKI FULLNAME OVERRIDE VALUE>-gateway/.
       url: http://loki-gateway/
-      orgId: 1
       isDefault: false
-    # Configures Tempo datasource
+    # Tempo datasource.
     - name: Tempo
       uid: tempo
       type: tempo
+      # Format: http://<TEMPO FULLNAME OVERRIDE VALUE>:3100/.
       url: http://tempo:3100/
       isDefault: false
       jsonData:
+        # Matches Prometheus data source query method.
         httpMethod: POST
+        # 'Trace to logs' feature configuration.
+        # https://grafana.com/docs/grafana/latest/explore/trace-integration/#trace-to-logs.
         tracesToLogsV2:
           datasourceUid: loki
+        # 'Loki search' feature configuration.
+        # https://grafana.com/docs/grafana/latest/datasources/tempo/configure-tempo-data-source/#loki-search.
         lokiSearch:
           datasourceUid: loki
+        # 'Trace to metrics' feature configuration.
+        # https://grafana.com/docs/grafana/latest/datasources/tempo/configure-tempo-data-source/#trace-to-metrics.
         tracesToMetrics:
           datasourceUid: prometheus
+        # 'Node Graph' feature configuration.
+        # https://grafana.com/docs/grafana/latest/datasources/tempo/configure-tempo-data-source/#node-graph.
         nodeGraph:
           enabled: true
+        # 'Service Graph' feature configuration.
+        # https://grafana.com/docs/grafana/latest/datasources/tempo/configure-tempo-data-source/#service-graph.
         serviceMap:
           datasourceUid: prometheus
+
+    # ingress (map): Grafana Ingress configuration.
     ingress:
-      # Enables Grafana ingress
+      # enabled (bool): Whether to create ingress object.
       enabled: true
+
+      # annotations (map(string)): Annotations for Ingress object.
+      ##
       annotations:
-        # Configures ClusterIssuer to obtain TLS certificate
+        # Annotations for cert-manager. More: https://github.com/cert-manager/cert-manager.
+        ##
+        # Cluster issuer name to use for TLS certificate issuing.
         cert-manager.io/cluster-issuer: sectigo
+
+        # Annotations for Forecastle. More: https://github.com/stakater/Forecastle.
+        ##
+        # Whether to display ingress in Forecastle.
         forecastle.stakater.com/expose: "true"
-        forecastle.stakater.com/group: management
+        # Name of group under which ingress is displayed in Forecastle.
         forecastle.stakater.com/group: observability
+        # Override for name under which ingress is displayed in Forecastle.
         forecastle.stakater.com/appName: Grafana
+        # URL of icon/image to display with ingress in Forecastle.
         forecastle.stakater.com/icon: https://github.com/stakater/ForecastleIcons/raw/master/grafana.png
-    # Configures Grafana UI administrator's username
+
+      # hosts (list(string)): List of ingress hostnames.
+      # Set by Terraform.
       hosts:
       - ""
+
+      # tls (list(map)): TLS configuration for Ingress hostnames.
+      ##
       tls:
+      # secretName (string): Name of Secrets to include TLS certificate.
+      # Set by Terraform.
       - secretName: ""
+        # hosts (list(string)): List of hostnames to which TLS certificate applies.
+        # Set by Terraform.
         hosts:
         - ""
+
+    # adminUser (string): Grafana UI administrator username.
+    # Set by Terraform.
     adminUser: ""
-    # Configures Grafana UI administrator's password
+    # adminPassword (string): Grafana UI administrator password.
+    # Set by Terraform.
     adminPassword: ""
+
+  # kubeControllerManager (map): Prometheus configuration to scrape cluster's kube-controller-manager.
+  ##
   kubeControllerManager:
-    # Enables Kubernetes controller manager monitoring
+    # enabled (bool): Whether to enable kube-controller-manager scraping.
     enabled: true
-    # Configures Kubernetes controller manager endpoints
+    # endpoints (list(string)): kube-controller-manager IP addresses.
     endpoints: []
+
+  # kubeEtcd (map): Prometheus configuration to scrape cluster's etcd.
+  ##
   kubeEtcd:
-    # Enables Kubernetes etcd monitoring
+    # enabled (bool): Whether to enable etcd scraping.
     enabled: true
-    # Configures Kubernetes etcd endpoints
+    # endpoints (list(string)): etcd IP addresses.
     endpoints: []
+
+    # service (map): Prometheus-created etcd ServiceMonitor configuration.
+    ##
     service:
-      # Configures port of etcd service created by Prometheus
+      # port (string|number): Service internal port number.
       port: 2379
-      # Configures target port of etcd service created by Prometheus
+      # targetPort (string|number): target port of etcd endpoints.
       targetPort: 2379
+
+    # serviceMonitor (map): Configuration of ServiceMonitor for secure access to etcd cluster.
+    ##
     serviceMonitor:
-      # Enabled Kubernetes etcd ServiceMonitor
+      # enabled (bool): Whether to enable ServiceMonitor for etcd endpoints.
       enabled: true
-      # Configures HTTPS for use to communicate with etcd
+      # scheme (string): Whether to use HTTP or HTTPS for communication with etcd.
       scheme: https
-      # Configures etcd CA certificate from Secret used in prometheus.prometheus.prometheusSpec.secrets
+      # caFile (string): Path to file containing etcd CA certificate.
+      # Format: /etc/prometheus/secrets/<SECRET NAME>/<SECRET KEY>
       caFile: /etc/prometheus/secrets/etcd-certs/ca.crt
-      # Configures etcd client certificate from Secret used in prometheus.prometheus.prometheusSpec.secrets
+      # certFile (string): Path to file containing client certificate to access etcd.
+      # Format: /etc/prometheus/secrets/<SECRET NAME>/<SECRET KEY>
       certFile: /etc/prometheus/secrets/etcd-certs/client.crt
-      # Configures etcd client key from Secret used in prometheus.prometheus.prometheusSpec.secrets
+      # keyFile (string): Path to file containing client certificate key.
+      # Format: /etc/prometheus/secrets/<SECRET NAME>/<SECRET KEY>
       keyFile: /etc/prometheus/secrets/etcd-certs/client.key
+
+  # kubeScheduler (map): Prometheus configuration to scrape cluster's kube-scheduler.
+  ##
   kubeScheduler:
-    # Enables Kubernetes scheduler monitoring
+    # enabled (bool): Whether to enable kube-scheduler scraping.
     enabled: true
-    # Configures Kubernetes scheduler endpoints
+    # endpoints (list(string)): kube-scheduler IP addresses.
     endpoints: []
+
+  # kubeProxy (map): Prometheus configuration to scrape cluster's kube-proxy.
+  ##
   kubeProxy:
-    # Enables Kubernetes proxy monitoring
+    # enabled (bool): Whether to enable kube-proxy scraping.
     enabled: true
-    # Configures Kubernetes proxy endpoints
+    # endpoints (list(string)): kube-proxy IP addresses.
     endpoints: []
+
+  # kubeProxy (map): Prometheus configuration to scrape cluster's CoreDNS.
+  ##
   coreDns:
-    # Enables Kubernetes CoreDNS monitoring
+    # enabled (bool): Whether to enable CoreDNS scraping.
     enabled: true
+
+    # service (map): Configuration of CoreDNS Service.
+    ##
     service:
+      # selector (map(string)): Selector labels of existing CoreDNS Service.
+      ##
       selector:
-        # Configures CoreDNS release's label
         k8s-app: coredns
+
+# loki (map): Loki sub-chart values.
+##
 loki:
+  # fullnameOverride (string): Override for prefix of Loki objects.
   fullnameOverride: loki
+
+  # global (map): Loki sub-chart global values.
+  ##
   global:
-    # Configures Kubernetes service discovery service name
+    # dnsService (string): Name of cluster's DNS server Service.
     dnsService: coredns
+
+    # image (map): Loki image configuration.
+    ##
     image:
-      # Configures URL of private image registry
+      # registry (string): URL of image registry (without `https://`).
+      # Set By Terraform.
       registry: ""
-  # Overrides Loki release's computed fullname
+
+  # test (map): Loki test configuration.
+  ##
   test:
+    # enabled (bool): Whether to enable test mode.
     enabled: false
+
+  # loki (map): Loki configuration.
+  ##
   loki:
+    # Disable authentication.
     auth_enabled: false
     compactor:
+      # Enable retention.
       retention_enabled: true
     limits_config:
+      # Retention period.
       retention_period: 336h # 14 days.
+
+  # backend (map): Loki backend Pods configuration.
+  ##
   backend:
+    # replicas (number): Amount of Loki backend Pods.
     replicas: 2
+
+  # write (map): Loki write configuration.
+  ##
   write:
+    # replicas (number): Amount of Loki write Pods.
     replicas: 2
+
+  # gateway (map): Loki gateway Pods configuration.
+  ##
   gateway:
+    # replicas (number): Amount of Loki gateway Pods.
     replicas: 2
+
+  # read (map): Loki read Pods configuration.
+  ##
   read:
+    # replicas (number): Amount of Loki read Pods.
     replicas: 2
+
+  # monitoring (map): Loki monitoring configuration.
+  ##
   monitoring:
+    # selfMonitoring (map): Loki self-monitoring configuration.
+    ##
     selfMonitoring:
+      # enabled (bool): Whether to enable Loki self-monitoring.
       enabled: false
+      # grafanaAgent (map): Grafana Agent configuration.
+      ##
       grafanaAgent:
+        # installOperator (bool): Whether to install Grafana Agent Operator.
         installOperator: false
+
+    # serviceMonitor (map): Loki ServiceMonitor configuration.
     serviceMonitor:
+      # enabled (bool): Whether to enable Loki ServiceMonitor.
       enabled: true
+
+  # minio (map): Loki MinIO sub-chart values.
+  ##
   minio:
-    # Enables MinIO object storage for Loki
+    # enabled (bool): Whether to enable MinIO deployment.
     enabled: true
-    # Configures MinIO standalone mode
+    # fullnameOverride (string): Override for prefix of MinIO objects.
     fullnameOverride: loki-minio
+    # mode (string): MinIO operational mode.
     mode: standalone
-    # Overrides MinIO release's computed fullname
-    fullnameOverride: loki-minio
-    # Configures MinIO console UI administrator's username
+    # rootUser (string): MinIO console administrator username.
+    # Set by Terraform.
     rootUser: ""
-    # Configures MinIO console UI administrator's password
+    # rootPassword (string): MinIO console administrator password.
+    # Set by Terraform.
     rootPassword: ""
+
+    # persistence (map): MinIO storage (PVC) configuration.
+    ##
     persistence:
-      # Configures MinIO persistent volume size
+      # size (string): Size of MinIO persistent volume.
       size: 200Gi
+
+    # ingress (map): MinIO console Ingress configuration.
+    ##
     consoleIngress:
-      # Enabled MinIO console ingress
+      # enabled (bool): Whether to create ingress object.
       enabled: true
+
+      # annotations (map(string)): Annotations for Ingress object.
+      ##
       annotations:
-        # Configures ClusterIssuer to obtain TLS certificate
+        # Annotations for cert-manager. More: https://github.com/cert-manager/cert-manager.
+        ##
+        # Cluster issuer name to use for TLS certificate issuing.
         cert-manager.io/cluster-issuer: sectigo
+
+        # Annotations for Forecastle. More: https://github.com/stakater/Forecastle.
+        ##
+        # Whether to display ingress in Forecastle.
         forecastle.stakater.com/expose: "true"
+        # Name of group under which ingress is displayed in Forecastle.
         forecastle.stakater.com/group: storage
+        # Override for name under which ingress is displayed in Forecastle.
         forecastle.stakater.com/appName: Loki MinIO
+        # URL of icon/image to display with ingress in Forecastle.
         forecastle.stakater.com/icon: https://github.com/stakater/ForecastleIcons/raw/master/minio.png
-      # Configures ingress hostnames
+
+        # hosts (list(string)): List of ingress hostnames.
+      # Set by Terraform.
       hosts:
       - ""
+
+      # tls (list(map)): TLS configuration for Ingress hostnames.
+      ##
       tls:
-      # Configures name of Secret to use for ingress TLS termination
+      # secretName (string): Name of Secrets to include TLS certificate.
+      # Set by Terraform.
       - secretName: ""
-        # Configures hostnames covered with TLS certificate
+        # hosts (list(string)): List of hostnames to which TLS certificate applies.
+        # Set by Terraform.
         hosts:
         - ""
+
+  # extraObjects (list(map)): Extra objects definitions.
+  ##
   extraObjects:
+  # Job to create MinIO bucket on startup.
+  ##
   - apiVersion: batch/v1
     kind: Job
     metadata:
@@ -325,30 +574,66 @@ loki:
                   name: loki-minio
               - secret:
                   name: loki-minio
+
+# tempo (map): Tempo sub-chart values.
+##
 tempo:
-  # Overrides Tempo release's computed fullname
+  # fullnameOverride (string): Override for prefix of Tempo objects.
   fullnameOverride: tempo
+
+  # persistence (map): Storage (PVC) configuration.
+  ##
   persistence:
-    # Enables Tempo persistent volumes
+    # enabled (bool): Whether to enable PV.
     enabled: true
+
+  # tempo (map): Tempo configuration.
   tempo:
-    # Configures URL of private image registry
+    # repository (string): URL of image repository (without `https://`).
+    # Set By Terraform.
     repository: ""
+
+# otlp (map): OpenTelemetry Operator sub-chart values.
+##
 opentelemetry-operator:
+  # fullnameOverride (string): Override for prefix of OpenTelemetry Operator objects.
   fullnameOverride: opentelemetry-operator
+
+  # admissionWebhooks (map): Admission webhooks configuration.
+  ##
   admissionWebhooks:
+    # timeoutSeconds (number): Timeout of webhooks in seconds.
     timeoutSeconds: 30
+    # failurePolicy (string): Failure policy of admission webhooks.
     failurePolicy: Ignore
+
+    # cert-manager (map): cert-manager configuration.
+    ##
     certManager:
+      # enabled (bool): Whether to enable cert-manager for admission webhooks.
       enabled: false
+
+    # autoGenerateCert (map): Certificate auto-generation configuration.
+    ##
     autoGenerateCert:
+      # recreate (bool): Whether to recreate certificate on chart upgrade.
       recreate: false
+
+# promtail (map): Promtail sub-chart values.
+##
 promtail:
-  # Overrides Promtail release's computed fullname
+  # fullnameOverride (string): Override for prefix of Promtail objects.
   fullnameOverride: promtail
+
+  # global (map): Global Promtail configuration.
+  ##
   global:
-    # Configures URL of private image registry
+    # imageRegistry (string): URL of image registry (without `https://`).
+    # Set By Terraform.
     imageRegistry: ""
+
+  # tolerations (list(map)): Tolerations for Promtail Pods.
+  # Tolerations to enable DaemonSet Pods to be scheduled on every Kubernetes node.
   tolerations:
   - effect: NoSchedule
     operator: Exists
