@@ -64,6 +64,7 @@ kube-prometheus-stack:
   prometheus:
     prometheusSpec:
       # Makes Prometheus match all PodMonitors
+      enableRemoteWriteReceiver: true
       podMonitorSelectorNilUsesHelmValues: false
       # Makes Prometheus match all ServiceMonitors
       serviceMonitorSelectorNilUsesHelmValues: false
