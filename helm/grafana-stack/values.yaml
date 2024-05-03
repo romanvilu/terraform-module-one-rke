@@ -49,6 +49,9 @@ kube-prometheus-stack:
   # cleanPrometheusOperatorObjectNames (bool): Whether to use cleaner names for objects created by Prometheus Operator.
   cleanPrometheusOperatorObjectNames: true
 
+  prometheusOperator:
+    fullnameOverride: prometheus-operator
+
   # alertmanager (map): Alertmanager configuration.
   ##
   alertmanager:
