@@ -645,3 +645,22 @@ promtail:
     operator: Exists
   - effect: NoExecute
     operator: Exists
+
+  # config (map): Promtail primary configuration.
+  ##
+  config:
+    snippets:
+      # pipelineStages (list(map)): Log pipelines configuration.
+      ##
+      pipelineStages:
+      # Default pipeline to parse logs from containers.
+      - cri: { }
+      # Transform JSON extracted from containers.
+      - json:
+          expressions:
+            log: log
+            stream: stream
+            time: time
+      # Output only log field.
+      - output:
+          source: log
