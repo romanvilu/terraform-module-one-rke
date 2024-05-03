@@ -2,10 +2,6 @@
 # Common
 ################################################################################
 
-locals {
-  cluster_dns_server_ip = cidrhost(var.cluster_service_cidr, 10)
-}
-
 resource "random_pet" "this" {
   length = 1
 }
@@ -261,7 +257,7 @@ resource "rke_cluster" "this" {
     }
 
     kubelet {
-      cluster_dns_server = local.cluster_dns_server_ip
+      cluster_dns_server = cidrhost(var.cluster_service_cidr, 10)
       extra_args = {
         container-runtime-endpoint   = "unix:///var/run/crio/crio.sock"
         node-status-update-frequency = "5s"
@@ -355,7 +351,7 @@ resource "helm_release" "coredns" {
   dynamic "set" {
     for_each = {
       "coredns.image.repository"  = "${var.image_registry}/coredns/coredns"
-      "coredns.service.clusterIP" = local.cluster_dns_server_ip
+      "coredns.service.clusterIP" = rke_cluster.this.cluster_dns_server
     }
     content {
       name  = set.key
