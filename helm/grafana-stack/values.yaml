@@ -41,7 +41,7 @@ etcd:
   # Set by Terraform.
   clientKey: ""
 
-# prometheus (map): Prometheus (alias for kube-prometheus-stack) sub-chart values.
+# kube-prometheus-stack (map): Prometheus (alias for kube-prometheus-stack) sub-chart values.
 ##
 kube-prometheus-stack:
   # fullnameOverride (string): Override for prefix of Prometheus-related objects.
@@ -108,7 +108,7 @@ kube-prometheus-stack:
         hosts:
         - ""
 
-  # prometheus (map): Prometheus configuration.
+  # prometheus (map): Prometheus sub-chart's values.
   ##
   prometheus:
     # prometheusSpec (map): Prometheus object configuration.
@@ -280,6 +280,7 @@ kube-prometheus-stack:
           datasourceUid: prometheus
 
     # ingress (map): Grafana Ingress configuration.
+    ##
     ingress:
       # enabled (bool): Whether to create ingress object.
       enabled: true
@@ -596,7 +597,7 @@ tempo:
     # Set By Terraform.
     repository: ""
 
-# otlp (map): OpenTelemetry Operator sub-chart values.
+# opentelemetry-operator (map): OpenTelemetry Operator sub-chart values.
 ##
 opentelemetry-operator:
   # fullnameOverride (string): Override for prefix of OpenTelemetry Operator objects.
