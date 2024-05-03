@@ -654,7 +654,7 @@ promtail:
       ##
       pipelineStages:
       # Default pipeline to parse logs from containers.
-      - cri: { }
+      - cri: {}
       # Transform JSON extracted from containers.
       - json:
           expressions:
