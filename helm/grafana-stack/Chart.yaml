@@ -1,8 +1,6 @@
 apiVersion: v2
 name: grafana-stack
-description: >
-  Chart to deploy Grafana observability stack services and their CRDs,
-  including Prometheus, Grafana, Loki, Tempo and Promtail.
+description: Grafana observability stack services and their CRDs.
 type: application
 version: 0.1.0
 dependencies:
