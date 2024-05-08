@@ -1,19 +1,31 @@
 global:
-  # Configures ACME-type ClusterIssuer
-  # https://cert-manager.io/docs/configuration/acme/#external-account-bindings
+  # clusterIssuers (map): ClusterIssuers values.
+  ##
   clusterIssuers:
+    # acme (map): ACME ClusterIssuer configuration.
+    ##
     acme:
-      # Configures email for notifications
+      # email (string): Email to receive notifications from cert-manager.
+      # Set by Terraform.
       email: ""
-      # Configures ACME server address
+      # server (string): ACME server URL.
+      # Set by Terraform.
       server: ""
-      # Configures ACME account key ID
+      # hmacKeyId (string): ACME HMAC account key ID.
+      # Set by Terraform.
       hmacKeyId: ""
-      # Configures ACME accounts key secret
+      # hmacKeySecret (string): ACME HMAC account key secret value.
+      # Set by Terraform.
       hmacKeySecret: ""
+
+# cert-manager (map): cert-manager chart values.
+##
 cert-manager:
-  # Enables cert-manager CRDs installation
+  # installCRDs (bool): Whether to install cert-manager CRDs.
   installCRDs: true
+
+  # startupapicheck (map): Startup API check configuration.
+  ##
   startupapicheck:
-    # Configures startup API check timeout
+    # timeout (string): Startup API check timeout time.
     timeout: 5m
