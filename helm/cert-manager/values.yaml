@@ -20,6 +20,9 @@ clusterIssuers:
 # cert-manager (map): cert-manager chart values.
 ##
 cert-manager:
+  # fullnameOverride (string): Override for prefix of cert-manager related objects.
+  fullnameOverride: cert-manager
+
   # installCRDs (bool): Whether to install cert-manager CRDs.
   installCRDs: true
 
