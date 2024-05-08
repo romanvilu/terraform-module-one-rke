@@ -16,7 +16,6 @@ ingress-nginx:
     # service (map): Service configuration.
     ##
     service:
-
       # enabled (bool): Whether to enable Service.
       enabled: true
       # externalTrafficPolicy (string): Type of external traffic policy.
