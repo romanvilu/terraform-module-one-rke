@@ -594,7 +594,7 @@ tempo:
   # tempo (map): Tempo configuration.
   tempo:
     # repository (string): URL of image repository (without `https://`).
-    # Set By Terraform.
+    # Set by Terraform.
     repository: ""
 
 # opentelemetry-operator (map): OpenTelemetry Operator sub-chart values.

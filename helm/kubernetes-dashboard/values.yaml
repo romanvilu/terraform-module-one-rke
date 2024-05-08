@@ -1,22 +1,53 @@
+# kubernetes-dashboard (map): Kubernetes Dashboard chart values.
+##
 kubernetes-dashboard:
+  # fullnameOverride (string): Override for prefix of Kubernetes Dashboard objects.
+  fullnameOverride: kubernetes-dashboard
+
+  # image (map): Kubernetes Dashboard image configuration.
+  ##
   image:
+    # repository (string): URL of image repository (without `https://`).
+    # Set by Terraform.
     repository: ""
+
+  # ingress (map): Ingress configuration.
+  ##
   ingress:
-    # Enables ingress
+    # enabled (bool): Whether to create Ingress.
     enabled: true
-    # Configures ingress hostnames
+
+    # annotations (map(string)): Ingress annotations.
+    ##
+    annotations:
+      # Annotations for cert-manager. More: https://github.com/cert-manager/cert-manager.
+      ##
+      # Cluster issuer name to use for TLS certificate issuing.
+      cert-manager.io/cluster-issuer: sectigo
+
+      # Annotations for Forecastle. More: https://github.com/stakater/Forecastle.
+      ##
+      # Whether to display ingress in Forecastle.
+      forecastle.stakater.com/expose: "true"
+      # Name of group under which ingress is displayed in Forecastle.
+      forecastle.stakater.com/group: management
+      # Override for name under which ingress is displayed in Forecastle.
+      forecastle.stakater.com/appName: Kubernetes Dashboard
+      # URL of icon/image to display with ingress in Forecastle.
+      forecastle.stakater.com/icon: https://github.com/stakater/ForecastleIcons/raw/master/kubernetes.png
+
+    # hosts (list(string)): List of Ingress hostnames.
+    # Set by Terraform.
     hosts:
     - ""
+
+    # tls (list(map)): TLS configuration for Ingress hostnames.
+    ##
     tls:
-    # Configures name of Secret to use for ingress TLS termination
+    # secretName (string): Name of Secrets to include TLS certificate.
+    # Set by Terraform.
     - secretName: ""
-      # Configures hostnames covered with TLS certificate
+      # hosts (list(string)): List of hostnames to which TLS certificate applies.
+      # Set by Terraform.
       hosts:
       - ""
-    annotations:
-      # Configures ClusterIssuer to obtain TLS certificate
-      cert-manager.io/cluster-issuer: sectigo
-      forecastle.stakater.com/expose: "true"
-      forecastle.stakater.com/group: management
-      forecastle.stakater.com/appName: Kubernetes Dashboard
-      forecastle.stakater.com/icon: https://github.com/stakater/ForecastleIcons/raw/master/kubernetes.png

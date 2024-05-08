@@ -1,12 +1,24 @@
+# coredns (map): CoreDNS chart values.
+##
 coredns:
-  # Overrides CoreDNS release's computed fullname
+  # fullnameOverride (string): Override for prefix of CoreDNS-related objects.
   fullnameOverride: coredns
+
+  # image (map): CoreDNS image configuration.
+  ##
   image:
+    # repository (string): URL of image repository (without `https://`).
+    # Set by Terraform.
     repository: ""
-  # Configures Pod count
+
+  # replicaCount (number): Amount of CoreDNS Pods.
   replicaCount: 2
-  # Configures CoreDNS to be deployd as cluster service discovery
+
+  # isClusterService (bool): Whether to deploy CoreDNS as cluster service discovery.
   isClusterService: true
+
+  # service (map): Service configuration.
+  ##
   service:
-    # Configures static clusterIP for CoreDNS service
+    # clusterIP (string): Service IP address in cluster.
     clusterIP: ""
