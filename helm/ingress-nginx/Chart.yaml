@@ -1,6 +1,6 @@
 apiVersion: v2
 name: ingress-nginx
-description: Chart to deploy NGINX Ingress Controller
+description: Ingress NGINX Controller
 type: application
 version: 0.1.0
 dependencies:

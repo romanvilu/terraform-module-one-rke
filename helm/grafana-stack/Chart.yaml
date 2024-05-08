@@ -1,6 +1,6 @@
 apiVersion: v2
 name: grafana-stack
-description: Grafana observability stack services and their CRDs.
+description: Grafana Observability Stack
 type: application
 version: 0.1.0
 dependencies:

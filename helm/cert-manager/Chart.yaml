@@ -1,6 +1,6 @@
 apiVersion: v2
 name: cert-manager
-description: Chart to deploy cert-manager and its CRDs
+description: cert-manager
 type: application
 version: 0.1.0
 dependencies:

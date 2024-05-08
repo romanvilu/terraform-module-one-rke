@@ -1,6 +1,6 @@
 apiVersion: v2
 name: coredns
-description: Chart to deploy CoreDNS as cluster service discovery
+description: CoreDNS
 type: application
 version: 0.1.0
 dependencies:
