@@ -1,33 +1,58 @@
+# ingress-nginx (map): ingress-nginx chart values.
+##
 ingress-nginx:
+  # controller (map): Controller values.
+  ##
   controller:
-    # Configures Ingress Controller to be deployed as Deployment
+    # kind (string): Type of object for controller deployment.
     kind: Deployment
-    # Configured Pod count
+
+    # admissionWebhooks (map): Admission webhooks configuration.
+    ##
     admissionWebhooks:
-      # Disables admission webhooks
+      # enabled (bool): Whether to enable admission webhooks.
       enabled: false
+
+    # service (map): Service configuration.
+    ##
     service:
-      # Enable Ingress Controller Service
+
+      # enabled (bool): Whether to enable Service.
       enabled: true
-      # Configures external traffic policy
+      # externalTrafficPolicy (string): Type of external traffic policy.
+      # 'Local' policy preserves client source IP address.
       externalTrafficPolicy: Local
-      # Configures LoadBalancer-type Service for Ingress Controller
+      # type (string): Service type.
       type: LoadBalancer
-      # Disables HTTP on target port
+      # enableHttp (bool): Whether to enable HTTP endpoint.
       enableHttp: false
-      # Enables HTTP on target port
+      # enableHttps (bool): Whether to enable HTTPS endpoint.
       enableHttps: true
+
+      # nodePorts (map(string, number)): Service node port mapping configuration.
+      ##
       nodePorts:
-        # Configures NodePort for Service
+        # HTTPS port number.
         https: 30443
-      # Configures external IP addresses for LoadBalancers
+
+      # externalIPs (list(string)): List of Service external IP addresses.
+      ##
       externalIPs:
+      # External load balancer virtual IP address.
+      # Set by Terraform.
       - ""
+
+    # config (map): Controller configuration.
+    ##
     config:
-      # Enables HSTS
+      # hsts (bool): Whether to enable HSTS policy.
+      # Force clients to establish HTTPS connection.
       hsts: true
-      # Enables HSTS also for subdomains
+      # hsts-include-subdomains (bool): Whether to enable HSTS for subdomains.
       hsts-include-subdomains: true
+
+    # ingressClassResource (map): IngressClass configuration.
+    ##
     ingressClassResource:
-      # Configures IngressClass as default
+      # default (bool): Whether to make IngressCrass default.
       default: true
