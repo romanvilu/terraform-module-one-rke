@@ -1,3 +1,22 @@
+
+# auth (map): Authentication configuration.
+##
+basicAuth:
+  # adminUser (string): Basic authentication username
+  adminUser: ""
+  # adminPassword (string): Basic authentication password
+  adminPassword: ""
+
+# s3 (map): S3 backup configuration.
+##
+s3Backup:
+  # endpoint (string): S3 endpoint
+  endpoint: ""
+  # accessKeyId (string): S3 access key ID
+  accessKeyId: ""
+  # secretAccessKey (string): S3 secret access key.
+  secretAccessKey: ""
+
 # longhorn (map): Longhorn chart values.
 ##
 longhorn:
@@ -68,30 +87,6 @@ longhorn:
       forecastle.stakater.com/appName: Longhorn
       # URL of icon/image to display with ingress in Forecastle.
       forecastle.stakater.com/icon: https://longhorn.io/img/logos/longhorn-icon-color.png
-
-  # longhornUI (map): Longhorn UI configuration.
-  ##
-  longhornUI:
-    # auth (map): Authentication configuration.
-    ##
-    auth:
-      # adminUser (string): Basic authentication username
-      adminUser: ""
-      # adminPassword (string): Basic authentication password
-      adminPassword: ""
-
-  # longhornManager (map): Longhorn Manager configuration.
-  ##
-  longhornManager:
-    # s3 (map): S3 backup configuration.
-    ##
-    s3:
-      # endpoint (string): S3 endpoint
-      endpoint: ""
-      # accessKeyId (string): S3 access key ID
-      accessKeyId: ""
-      # secretAccessKey (string): S3 secret access key.
-      secretAccessKey: ""
 
   # persistence (map): Persistence configuration.
   ##
