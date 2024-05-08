@@ -1,63 +1,100 @@
+# longhorn (map): Longhorn chart values.
+##
 longhorn:
+  # defaultSettings (map): Longhorn configuration settings.
+  ##
   defaultSettings:
-    # Configures default data directory path on Kubernetes worker
+    # Default data directory path mapping on Kubernetes hosts.
     defaultDataPath: /data
-    # Allows Longhorn uninstallation
+    # Whether to enable Longhorn chart uninstallation.
     deletingConfirmationFlag: true
-    # Configures reserved storage percentage
+    # Percentage of reserved disk space.
     storageReservedPercentageForDefaultDisk: 10
-    # Configures backup target location
+    # Backup target location.
     backupTarget: ""
-    # Configures credentials to access backup target
+    # Secret containing credentials to access backup target.
     backupTargetCredentialSecret: backup-target
-    # Enables StatefulSet and Deployment pods deletion from failed node to enable volume reattachment
+    # Policy of StatefulSet and Deployment Pods deletion on failed nodes.
+    # Needed for automatic reattachment of PVCs during Pods reschedule.
     nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
-    # Configures default volume replica count
+    # Amount of PVC replicas created through Longhorn UI.
     defaultReplicaCount: 2
+
+  # privateRegistry (map): Private registry configuration.
+  ##
   privateRegistry:
-    # Configures URL of private image registry
+    # registryUrl (string): URL of image registry (without `https://`).
+    # Set By Terraform.
     registryUrl: ""
+
+  # ingress (map): Grafana Ingress configuration.
+  ##
   ingress:
-    # Enables Longhorn ingress
+    # enabled (bool): Whether to create Ingress object.
     enabled: true
-    # Configures ingress hostname
+    # host (string): Ingress hostname.
     host: ""
-    # Configures ingress path
+    # path (string): Ingress path.
     path: /
-    # Enables ingress TLS termination
+    # tls (bool): Whether to enable TLS for Ingress host.
     tls: true
-    # Configures TLS certificate Secret name
+    # tlsSecret (string): Name of Secret containing hostname TLS certificates.
     tlsSecret: ""
-    # Enables secure connection to Longhorn UI
-    secureBackends: true
+
     annotations:
-      # Configures ClusterIssuer to obtain TLS certificate
+      # Annotations for cert-manager. More: https://github.com/cert-manager/cert-manager.
+      ##
+      # Cluster issuer name to use for TLS certificate issuing.
       cert-manager.io/cluster-issuer: sectigo
-      # Configures body size for file uploading, e.g. backing image
+
+      # Annotations for ingress controller.
+      ##
+      # Maximum allowed size of client request body.
       nginx.ingress.kubernetes.io/proxy-body-size: 10000m
-      # Configures basic authentication type
+      # Type of authentication used when accessing hostnames configures in ingress.
       nginx.ingress.kubernetes.io/auth-type: basic
-      # Configures name of Secret containing username and password
+      # Name of secret object which contains authentication credentials.
       nginx.ingress.kubernetes.io/auth-secret: basic-auth
-      # Configures to display with appropriate context why authentication is required
+      # Message to include in HTTP response header.
       nginx.ingress.kubernetes.io/auth-realm: "Authentication Required "
+
+      # Annotations for Forecastle. More: https://github.com/stakater/Forecastle.
+      ##
+      # Whether to display ingress in Forecastle.
       forecastle.stakater.com/expose: "true"
+      # Name of group under which ingress is displayed in Forecastle.
       forecastle.stakater.com/group: management
+      # Override for name under which ingress is displayed in Forecastle.
       forecastle.stakater.com/appName: Longhorn
+      # URL of icon/image to display with ingress in Forecastle.
       forecastle.stakater.com/icon: https://longhorn.io/img/logos/longhorn-icon-color.png
+
+  # longhornUI (map): Longhorn UI configuration.
+  ##
   longhornUI:
+    # auth (map): Authentication configuration.
+    ##
     auth:
-      # Configures Longhorn UI basic authentication username
+      # adminUser (string): Basic authentication username
       adminUser: ""
-      # Configures Longhorn UI basic authentication password
+      # adminPassword (string): Basic authentication password
       adminPassword: ""
+
+  # longhornManager (map): Longhorn Manager configuration.
+  ##
   longhornManager:
+    # s3 (map): S3 backup configuration.
+    ##
     s3:
-      # Configures S3 service endpoint
+      # endpoint (string): S3 endpoint
       endpoint: ""
-      # Configures access key ID to access S3
+      # accessKeyId (string): S3 access key ID
       accessKeyId: ""
-      # Configures secret access key to access S3
+      # secretAccessKey (string): S3 secret access key.
       secretAccessKey: ""
+
+  # persistence (map): Persistence configuration.
+  ##
   persistence:
+    # defaultClassReplicaCount (number): Amount of PVC replicas provided by Longhorn StorageClass.
     defaultClassReplicaCount: 2
