@@ -271,9 +271,17 @@ resource "rke_cluster" "this" {
     }
   }
 
-  dns { provider = "none" }
-  network { plugin = "calico" }
-  monitoring { provider = "metrics-server" }
+  dns {
+    provider = "none"
+  }
+
+  network {
+    plugin = "calico"
+  }
+
+  monitoring {
+    provider = "metrics-server"
+  }
 
   ingress {
     provider     = "none"
