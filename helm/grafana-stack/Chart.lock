@@ -1,18 +1,18 @@
 dependencies:
-- name: opentelemetry-operator
-  repository: https://open-telemetry.github.io/opentelemetry-helm-charts
-  version: 0.52.4
 - name: kube-prometheus-stack
   repository: https://prometheus-community.github.io/helm-charts
   version: 54.2.2
 - name: loki
   repository: https://grafana.github.io/helm-charts
   version: 5.42.2
-- name: tempo
-  repository: https://grafana.github.io/helm-charts
-  version: 1.7.1
 - name: promtail
   repository: https://grafana.github.io/helm-charts
   version: 6.15.5
-digest: sha256:d457df7b82eb0bd288d680321c26139a19b84fcf8a86a2deb5f1f9076eba3259
-generated: "2024-05-02T19:08:14.429336117+03:00"
+- name: tempo
+  repository: https://grafana.github.io/helm-charts
+  version: 1.7.1
+- name: opentelemetry-operator
+  repository: https://open-telemetry.github.io/opentelemetry-helm-charts
+  version: 0.52.4
+digest: sha256:9e5a7a930491cd6464303a3229615efd8d9fe3d3ac5f4a8301f7cb6c62781784
+generated: "2024-05-08T18:28:27.899932984+03:00"
