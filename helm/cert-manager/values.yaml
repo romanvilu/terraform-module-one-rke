@@ -1,22 +1,21 @@
-global:
-  # clusterIssuers (map): ClusterIssuers values.
+# clusterIssuers (map): ClusterIssuers values.
+##
+clusterIssuers:
+  # acme (map): ACME ClusterIssuer configuration.
   ##
-  clusterIssuers:
-    # acme (map): ACME ClusterIssuer configuration.
-    ##
-    acme:
-      # email (string): Email to receive notifications from cert-manager.
-      # Set by Terraform.
-      email: ""
-      # server (string): ACME server URL.
-      # Set by Terraform.
-      server: ""
-      # hmacKeyId (string): ACME HMAC account key ID.
-      # Set by Terraform.
-      hmacKeyId: ""
-      # hmacKeySecret (string): ACME HMAC account key secret value.
-      # Set by Terraform.
-      hmacKeySecret: ""
+  acme:
+    # email (string): Email to receive notifications from cert-manager.
+    # Set by Terraform.
+    email: ""
+    # server (string): ACME server URL.
+    # Set by Terraform.
+    server: ""
+    # hmacKeyId (string): ACME HMAC account key ID.
+    # Set by Terraform.
+    hmacKeyId: ""
+    # hmacKeySecret (string): ACME HMAC account key secret value.
+    # Set by Terraform.
+    hmacKeySecret: ""
 
 # cert-manager (map): cert-manager chart values.
 ##

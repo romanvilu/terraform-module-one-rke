@@ -1,4 +1,4 @@
-{{- with .Values.global.clusterIssuers.acme }}
+{{- with .Values.clusterIssuers.acme }}
 {{- if and .email .server .hmacKeyId .hmacKeySecret }}
 apiVersion: v1
 kind: Secret
