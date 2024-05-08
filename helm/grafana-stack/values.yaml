@@ -41,7 +41,7 @@ etcd:
   # Set by Terraform.
   clientKey: ""
 
-# kube-prometheus-stack (map): Prometheus (alias for kube-prometheus-stack) sub-chart values.
+# kube-prometheus-stack (map): kube-prometheus-stack sub-chart values.
 ##
 kube-prometheus-stack:
   # fullnameOverride (string): Override for prefix of Prometheus-related objects.
