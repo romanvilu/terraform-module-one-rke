@@ -15,7 +15,7 @@
 - name: Install docker packages
   ansible.builtin.apt:
     name:
-    - docker-ce=5:23.0.6-1~ubuntu.22.04~{{ ansible_distribution_release }}
+    - docker-ce=5:24.0.9-1~ubuntu.22.04~{{ ansible_distribution_release }}
     - docker-buildx-plugin
     - docker-compose-plugin
 
@@ -41,9 +41,3 @@
     name: "{{ ansible_user }}"
     groups: docker
     append: true
-
-- name: Schedule unused docker data deletion
-  ansible.builtin.cron:
-    name: hourly docker system prune
-    job: docker system prune -f
-    special_time: hourly
