@@ -75,12 +75,12 @@ variable "cluster_data_plane_capacity" {
   nullable = false
 
   type = object({
-    size      = optional(number, 3)
-    cpu       = optional(number, 4)
-    vcpu      = optional(number, 8)
-    memory_mb = optional(number, 16384)
-    disk_mb   = optional(number, 204800)
-    datadisk_mb    = optional(number, 512000)
+    size        = optional(number, 3)
+    cpu         = optional(number, 4)
+    vcpu        = optional(number, 8)
+    memory_mb   = optional(number, 16384)
+    disk_mb     = optional(number, 204800)
+    datadisk_mb = optional(number, 512000)
   })
 
   default = {

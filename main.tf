@@ -488,19 +488,13 @@ resource "helm_release" "longhorn" {
 
   dynamic "set" {
     for_each = {
-      "longhorn.ingress.host"      = "longhorn.${var.domain}"
-      "longhorn.ingress.tlsSecret" = "longhorn.${var.domain}-tls"
-      "longhorn.defaultSettings.backupTarget" = try(
-        var.cluster_addons.longhorn.s3_backup.target, ""
-      )
-      "longhorn.longhornUI.auth.adminUser" = random_pet.this.id
-      "longhorn.longhornManager.s3.endpoint" = try(
-        var.cluster_addons.longhorn.s3_backup.endpoint, ""
-      )
-      "longhorn.longhornManager.s3.accessKeyId" = try(
-        var.cluster_addons.longhorn.s3_backup.access_key_id, ""
-      )
-      "longhorn.privateRegistry.registryUrl" = var.image_registry
+      "longhorn.ingress.host"                   = "longhorn.${var.domain}"
+      "longhorn.ingress.tlsSecret"              = "longhorn.${var.domain}-tls"
+      "longhorn.defaultSettings.backupTarget"   = try(var.cluster_addons.longhorn.s3_backup.target, "")
+      "longhorn.longhornUI.auth.adminUser"      = random_pet.this.id
+      "longhorn.longhornManager.s3.endpoint"    = try(var.cluster_addons.longhorn.s3_backup.endpoint, "")
+      "longhorn.longhornManager.s3.accessKeyId" = try(var.cluster_addons.longhorn.s3_backup.access_key_id, "")
+      "longhorn.privateRegistry.registryUrl"    = var.image_registry
     }
     content {
       name  = set.key
