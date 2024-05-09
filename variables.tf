@@ -3,24 +3,29 @@
 ################################
 
 variable "project" {
-  type = string
+  description = "Name of the project in which current module is used. Will be used to prefix OpenNebula resources"
+  type        = string
 }
 
 variable "environment" {
-  type = string
+  description = "Shortname of the environment for which module is used, e.g. `dev` or `live`"
+  type        = string
 }
 
 variable "domain" {
-  type = string
+  description = "Main domain, e.g. `example.com`, under which cluster services will be published as subdomains"
+  type        = string
 }
 
 variable "load_balancer_virtual_ip" {
-  type = string
+  description = "Virtual IP address for cluster external load balancer"
+  type        = string
 }
 
 variable "tags" {
-  type    = map(string)
-  default = {}
+  description = "Additional tags for OpenNebula resources"
+  type        = map(string)
+  default     = {}
 }
 
 ################################
@@ -28,18 +33,23 @@ variable "tags" {
 ################################
 
 variable "opennebula_image" {
-  type = string
+  description = "Name of existing Ubuntu 22.04 Server or Minimal image for virtual machines in OpenNebula"
+  type        = string
 }
 
 variable "opennebula_group" {
-  type = string
+  description = "Name of existing group which will own created resources in OpenNebula"
+  type        = string
 }
 
 variable "opennebula_virtual_network" {
-  type = string
+  description = "Name of existing virtual network in OpenNebula to attach virtual machines to"
+  type        = string
 }
 
 variable "cluster_control_plane_capacity" {
+  description = "Per-node (except for host count variable `size`) capacity of Kubernetes cluster control plane hosts"
+
   nullable = false
 
   type = object({
@@ -60,6 +70,8 @@ variable "cluster_control_plane_capacity" {
 }
 
 variable "cluster_data_plane_capacity" {
+  description = "Per-node (except for host count variable `size`) capacity of Kubernetes cluster worker hosts"
+
   nullable = false
 
   type = object({
@@ -82,6 +94,8 @@ variable "cluster_data_plane_capacity" {
 }
 
 variable "cluster_load_balancer_capacity" {
+  description = "Per-node (except for host count variable `size`) capacity of Kubernetes external load balancing hosts"
+
   nullable = false
 
   type = object({
@@ -106,24 +120,32 @@ variable "cluster_load_balancer_capacity" {
 ################################
 
 variable "image_registry" {
+  description = "Private image registry to use instead of Docker Hub (may be useful due to Docker Hub rate limit)"
+
   nullable = false
   type     = string
   default  = ""
 }
 
 variable "cluster_pod_cidr" {
+  description = "CIDR block used to assign IP addresses to Pods in Kubernetes cluster"
+
   nullable = false
   type     = string
   default  = "10.244.0.0/16"
 }
 
 variable "cluster_service_cidr" {
+  description = "CIDR block used to assign IP addresses to Services in Kubernetes cluster"
+
   nullable = false
   type     = string
   default  = "10.245.0.0/16"
 }
 
 variable "extra_cluster_sans" {
+  description = "Additional domain names/IP addresses to include in Kubernetes API server certificate"
+
   nullable = false
   type     = list(string)
   default  = []
@@ -134,6 +156,8 @@ variable "extra_cluster_sans" {
 ################################
 
 variable "cluster_addons" {
+  description = "Additional configurations for Kubernetes cluster addons"
+
   nullable = false
 
   type = object({

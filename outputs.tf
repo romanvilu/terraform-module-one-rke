@@ -3,19 +3,23 @@
 ################################################################################
 
 output "admin_username" {
-  value = random_pet.this.id
+  description = "Generated administrator username"
+  value       = random_pet.this.id
 }
 
 output "admin_password" {
-  value = nonsensitive(random_password.this.result)
+  description = "Generated administrator password"
+  value       = nonsensitive(random_password.this.result)
 }
 
 output "admin_public_key" {
-  value = tls_private_key.this.public_key_openssh
+  description = "Generated administrator OpenSSH public key"
+  value       = tls_private_key.this.public_key_openssh
 }
 
 output "admin_private_key" {
-  value = nonsensitive(tls_private_key.this.private_key_openssh)
+  description = "Generated administrator OpenSSH private key"
+  value       = nonsensitive(tls_private_key.this.private_key_openssh)
 }
 
 ################################################################################
@@ -23,15 +27,18 @@ output "admin_private_key" {
 ################################################################################
 
 output "cluster_load_balancer_hosts_addresses" {
-  value = opennebula_virtual_machine.lb.*.ip
+  description = "IP addresses of Kubernetes cluster external load balancing nodes"
+  value       = opennebula_virtual_machine.lb.*.ip
 }
 
 output "cluster_control_plane_addresses" {
-  value = opennebula_virtual_machine.rke_master.*.ip
+  description = "IP addresses of Kubernetes cluster control plane nodes"
+  value       = opennebula_virtual_machine.rke_master.*.ip
 }
 
 output "cluster_data_plane_addresses" {
-  value = opennebula_virtual_machine.rke_worker.*.ip
+  description = "IP addresses of Kubernetes cluster worker nodes"
+  value       = opennebula_virtual_machine.rke_worker.*.ip
 }
 
 ################################################################################
@@ -39,7 +46,8 @@ output "cluster_data_plane_addresses" {
 ################################################################################
 
 output "ansible_inventory" {
-  value = local_file.hosts.content
+  description = "Contents of generated Ansible inventory"
+  value       = local_file.hosts.content
 }
 
 ################################################################################
@@ -47,27 +55,33 @@ output "ansible_inventory" {
 ################################################################################
 
 output "cluster_config_yaml" {
-  value = rke_cluster.this.rke_cluster_yaml
+  description = "Kubernetes cluster configuration file"
+  value       = rke_cluster.this.rke_cluster_yaml
 }
 
 output "cluster_url" {
-  value = "https://${var.load_balancer_virtual_ip}:6443"
+  description = "Endpoint of Kubernetes cluster API server"
+  value       = "https://${var.load_balancer_virtual_ip}:6443"
 }
 
 output "cluster_ca_certificate" {
-  value = rke_cluster.this.ca_crt
+  description = "CA certificate of Kubernetes cluster API server"
+  value       = rke_cluster.this.ca_crt
 }
 
 output "cluster_client_key" {
-  value = rke_cluster.this.client_key
+  description = "Client key to access Kubernetes cluster API server"
+  value       = rke_cluster.this.client_key
 }
 
 output "cluster_client_certificate" {
-  value = rke_cluster.this.client_cert
+  description = "Client certificate to access Kubernetes cluster API server"
+  value       = rke_cluster.this.client_cert
 }
 
 output "kubeconfig_path" {
-  value = local_file.kubeconfig.filename
+  description = "Path of kubeconfig file to access Kubernetes cluster API server"
+  value       = local_file.kubeconfig.filename
 }
 
 ################################################################################
@@ -75,6 +89,8 @@ output "kubeconfig_path" {
 ################################################################################
 
 output "addons" {
+  description = "Kubernetes cluster addons attributes"
+
   value = {
     coredns = {
       name      = helm_release.coredns.name
