@@ -3,7 +3,8 @@
   hosts: all
   roles:
   - role: init
-  tags: init
+  tags:
+  - init
 
 - name: Configure rke hosts
   hosts: rke
