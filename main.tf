@@ -90,7 +90,7 @@ resource "opennebula_virtual_machine" "rke_master" {
 
   cpu    = var.cluster_control_plane_capacity.cpu
   vcpu   = var.cluster_control_plane_capacity.vcpu
-  memory = var.cluster_control_plane_capacity.memory
+  memory = var.cluster_control_plane_capacity.memory_mb
 
   nic {
     network_id = data.opennebula_virtual_network.this.id
@@ -99,7 +99,7 @@ resource "opennebula_virtual_machine" "rke_master" {
   disk {
     image_id = data.opennebula_image.this.id
     target   = "vda"
-    size     = var.cluster_control_plane_capacity.disk
+    size     = var.cluster_control_plane_capacity.disk_mb
   }
 }
 
@@ -117,7 +117,7 @@ resource "opennebula_virtual_machine" "rke_worker" {
 
   cpu    = var.cluster_data_plane_capacity.cpu
   vcpu   = var.cluster_data_plane_capacity.vcpu
-  memory = var.cluster_data_plane_capacity.memory
+  memory = var.cluster_data_plane_capacity.memory_mb
 
   nic {
     network_id = data.opennebula_virtual_network.this.id
@@ -126,12 +126,12 @@ resource "opennebula_virtual_machine" "rke_worker" {
   disk {
     image_id = data.opennebula_image.this.id
     target   = "vda"
-    size     = var.cluster_data_plane_capacity.disk
+    size     = var.cluster_data_plane_capacity.disk_mb
   }
 
   disk {
     target          = "vdb"
-    size            = var.cluster_data_plane_capacity.raw
+    size            = var.cluster_data_plane_capacity.datadisk_mb
     driver          = "raw"
     volatile_type   = "fs"
     volatile_format = "raw"
@@ -152,7 +152,7 @@ resource "opennebula_virtual_machine" "lb" {
 
   cpu    = var.cluster_load_balancer_capacity.cpu
   vcpu   = var.cluster_load_balancer_capacity.vcpu
-  memory = var.cluster_load_balancer_capacity.memory
+  memory = var.cluster_load_balancer_capacity.memory_mb
 
   nic {
     network_id = data.opennebula_virtual_network.this.id
@@ -161,7 +161,7 @@ resource "opennebula_virtual_machine" "lb" {
   disk {
     image_id = data.opennebula_image.this.id
     target   = "vda"
-    size     = var.cluster_load_balancer_capacity.disk
+    size     = var.cluster_load_balancer_capacity.disk_mb
   }
 }
 

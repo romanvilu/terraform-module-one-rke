@@ -43,19 +43,19 @@ variable "cluster_control_plane_capacity" {
   nullable = false
 
   type = object({
-    size   = optional(number, 3)
-    cpu    = optional(number, 2)
-    vcpu   = optional(number, 4)
-    memory = optional(number, 8192)
-    disk   = optional(number, 102400)
+    size      = optional(number, 3)
+    cpu       = optional(number, 2)
+    vcpu      = optional(number, 4)
+    memory_mb = optional(number, 8192)
+    disk_mb   = optional(number, 102400)
   })
 
   default = {
-    size   = 3
-    cpu    = 2
-    vcpu   = 4
-    memory = 8192
-    disk   = 102400
+    size      = 3
+    cpu       = 2
+    vcpu      = 4
+    memory_mb = 8192
+    disk_mb   = 102400
   }
 }
 
@@ -63,21 +63,21 @@ variable "cluster_data_plane_capacity" {
   nullable = false
 
   type = object({
-    size   = optional(number, 3)
-    cpu    = optional(number, 4)
-    vcpu   = optional(number, 8)
-    memory = optional(number, 16384)
-    disk   = optional(number, 204800)
-    raw    = optional(number, 512000)
+    size      = optional(number, 3)
+    cpu       = optional(number, 4)
+    vcpu      = optional(number, 8)
+    memory_mb = optional(number, 16384)
+    disk_mb   = optional(number, 204800)
+    datadisk_mb    = optional(number, 512000)
   })
 
   default = {
-    size   = 3
-    cpu    = 4
-    vcpu   = 8
-    memory = 16384
-    disk   = 204800
-    raw    = 512000
+    size        = 3
+    cpu         = 4
+    vcpu        = 8
+    memory_mb   = 16384
+    disk_mb     = 204800
+    datadisk_mb = 512000
   }
 }
 
@@ -85,19 +85,19 @@ variable "cluster_load_balancer_capacity" {
   nullable = false
 
   type = object({
-    size   = optional(number, 2)
-    cpu    = optional(number, 1)
-    vcpu   = optional(number, 2)
-    memory = optional(number, 4096)
-    disk   = optional(number, 20480)
+    size      = optional(number, 2)
+    cpu       = optional(number, 1)
+    vcpu      = optional(number, 2)
+    memory_mb = optional(number, 4096)
+    disk_mb   = optional(number, 20480)
   })
 
   default = {
-    size   = 2
-    cpu    = 1
-    vcpu   = 2
-    memory = 4096
-    disk   = 20480
+    size      = 2
+    cpu       = 1
+    vcpu      = 2
+    memory_mb = 4096
+    disk_mb   = 20480
   }
 }
 
