@@ -76,17 +76,13 @@ output "kubeconfig_path" {
 
 output "addons" {
   value = {
-    cert_manager = {
-      name      = helm_release.cert_manager.name
-      namespace = helm_release.cert_manager.namespace
-    }
     coredns = {
       name      = helm_release.coredns.name
       namespace = helm_release.coredns.namespace
     }
-    grafana_stack = {
-      name      = helm_release.grafana_stack.name
-      namespace = helm_release.grafana_stack.namespace
+    cert_manager = {
+      name      = helm_release.cert_manager.name
+      namespace = helm_release.cert_manager.namespace
     }
     ingress_nginx = {
       name      = helm_release.ingress_nginx.name
@@ -99,6 +95,10 @@ output "addons" {
     longhorn = {
       name      = helm_release.longhorn.name
       namespace = helm_release.longhorn.namespace
+    }
+    grafana_stack = {
+      name      = helm_release.grafana_stack.name
+      namespace = helm_release.grafana_stack.namespace
     }
   }
 }
