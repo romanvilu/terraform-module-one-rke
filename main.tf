@@ -40,7 +40,7 @@ locals {
       module      = "one-rke"
       terraform   = true
     },
-    var.tags
+    var.extra_tags
   )
 }
 

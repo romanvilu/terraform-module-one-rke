@@ -22,7 +22,7 @@ variable "load_balancer_virtual_ip" {
   type        = string
 }
 
-variable "tags" {
+variable "extra_tags" {
   description = "Additional tags for OpenNebula resources"
   type        = map(string)
   default     = {}
