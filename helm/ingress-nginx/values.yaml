@@ -18,9 +18,6 @@ ingress-nginx:
     service:
       # enabled (bool): Whether to enable Service.
       enabled: true
-      # externalTrafficPolicy (string): Type of external traffic policy.
-      # 'Local' policy preserves client source IP address.
-      externalTrafficPolicy: Local
       # type (string): Service type.
       type: LoadBalancer
       # enableHttp (bool): Whether to enable HTTP endpoint.
