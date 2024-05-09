@@ -19,6 +19,7 @@
 - name: Configure lb hosts
   hosts: lb
   roles:
+  - role: node_exporter
   - role: nginx
   - role: keepalived
   tags:

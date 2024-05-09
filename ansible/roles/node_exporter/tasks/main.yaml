@@ -1,0 +1,10 @@
+---
+- name: Install Prometheus Node Exporter package
+  ansible.builtin.apt:
+    name: prometheus-node-exporter
+
+- name: Start and enable Prometheus Node Exporter service
+  ansible.builtin.service:
+    name: prometheus-node-exporter
+    state: started
+    enabled: true
