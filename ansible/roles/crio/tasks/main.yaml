@@ -6,7 +6,7 @@
 
 - name: Add crio apt gpg key
   ansible.builtin.apt_key:
-    url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.26/xUbuntu_22.04/Release.key
+    url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.27/xUbuntu_22.04/Release.key
     keyring: /usr/share/keyrings/libcontainers-crio-archive-keyring.gpg
 
 - name: Add libcontainers apt repository
@@ -21,8 +21,8 @@
   ansible.builtin.apt_repository:
     repo: >
       deb [signed-by=/usr/share/keyrings/libcontainers-crio-archive-keyring.gpg]
-      https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.26/xUbuntu_22.04/ /
-    filename: devel:kubic:libcontainers:stable:cri-o:1.26
+      https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/1.27/xUbuntu_22.04/ /
+    filename: devel:kubic:libcontainers:stable:cri-o:1.27
     update_cache: true
 
 - name: Install crio packages
