@@ -358,7 +358,7 @@ resource "helm_release" "coredns" {
 
   dynamic "set" {
     for_each = {
-      "coredns.image.repository"  = "${var.image_registry}/coredns/coredns"
+      "coredns.image.repository"  = "${rke_cluster.this.private_registries[0].url}/coredns/coredns"
       "coredns.service.clusterIP" = rke_cluster.this.cluster_dns_server
     }
     content {
@@ -459,7 +459,7 @@ resource "helm_release" "kubernetes_dashboard" {
       "kubernetes-dashboard.ingress.hosts[0]"          = "dashboard.${var.domain}"
       "kubernetes-dashboard.ingress.tls[0].hosts[0]"   = "dashboard.${var.domain}"
       "kubernetes-dashboard.ingress.tls[0].secretName" = "dashboard.${var.domain}-tls"
-      "kubernetes-dashboard.image.repository"          = "${var.image_registry}/kubernetesui/dashboard"
+      "kubernetes-dashboard.image.repository"          = "${rke_cluster.this.private_registries[0].url}/kubernetesui/dashboard"
     }
     content {
       name  = set.key
@@ -494,7 +494,7 @@ resource "helm_release" "longhorn" {
       "longhorn.longhornUI.auth.adminUser"      = random_pet.this.id
       "longhorn.longhornManager.s3.endpoint"    = try(var.cluster_addons.longhorn.s3_backup.endpoint, "")
       "longhorn.longhornManager.s3.accessKeyId" = try(var.cluster_addons.longhorn.s3_backup.access_key_id, "")
-      "longhorn.privateRegistry.registryUrl"    = var.image_registry
+      "longhorn.privateRegistry.registryUrl"    = rke_cluster.this.private_registries[0].url
     }
     content {
       name  = set.key
@@ -546,15 +546,15 @@ resource "helm_release" "grafana_stack" {
       "kube-prometheus-stack.grafana.ingress.tls[0].hosts[0]"        = "grafana.${var.domain}"
       "kube-prometheus-stack.grafana.ingress.tls[0].secretName"      = "grafana.${var.domain}-tls"
       "kube-prometheus-stack.grafana.adminUser"                      = random_pet.this.id
-      "kube-prometheus-stack.grafana.image.registry"                 = var.image_registry
-      "loki.sidecar.image.repository"                                = "${var.image_registry}/kiwigrid/k8s-sidecar"
+      "kube-prometheus-stack.grafana.image.registry"                 = rke_cluster.this.private_registries[0].url
+      "loki.sidecar.image.repository"                                = "${rke_cluster.this.private_registries[0].url}/kiwigrid/k8s-sidecar"
       "loki.minio.consoleIngress.hosts[0]"                           = "loki-minio.${var.domain}"
       "loki.minio.consoleIngress.tls[0].hosts[0]"                    = "loki-minio.${var.domain}"
       "loki.minio.consoleIngress.tls[0].secretName"                  = "loki-minio.${var.domain}-tls"
       "loki.minio.rootUser"                                          = random_pet.this.id
-      "loki.global.image.registry"                                   = var.image_registry
-      "tempo.tempo.repository"                                       = "${var.image_registry}/grafana/tempo"
-      "promtail.global.imageRegistry"                                = var.image_registry
+      "loki.global.image.registry"                                   = rke_cluster.this.private_registries[0].url
+      "tempo.tempo.repository"                                       = "${rke_cluster.this.private_registries[0].url}/grafana/tempo"
+      "promtail.global.imageRegistry"                                = rke_cluster.this.private_registries[0].url
     }
     content {
       name  = set.key
