@@ -383,15 +383,9 @@ resource "helm_release" "cert_manager" {
 
   dynamic "set" {
     for_each = {
-      "global.clusterIssuers.acme.email" = try(
-        var.cluster_addons.cert_manager.acme_issuer.email, null
-      )
-      "global.clusterIssuers.acme.server" = try(
-        var.cluster_addons.cert_manager.acme_issuer.server_url, null
-      )
-      "global.clusterIssuers.acme.hmacKeyId" = try(
-        var.cluster_addons.cert_manager.acme_issuer.hmac_key_id, null
-      )
+      "clusterIssuers.acme.email"     = try(var.cluster_addons.cert_manager.acme_issuer.email, null)
+      "clusterIssuers.acme.server"    = try(var.cluster_addons.cert_manager.acme_issuer.server_url, null)
+      "clusterIssuers.acme.hmacKeyId" = try(var.cluster_addons.cert_manager.acme_issuer.hmac_key_id, null)
     }
     content {
       name  = set.key
@@ -401,9 +395,7 @@ resource "helm_release" "cert_manager" {
 
   dynamic "set_sensitive" {
     for_each = {
-      "global.clusterIssuers.acme.hmacKeySecret" = try(
-        var.cluster_addons.cert_manager.acme_issuer.hmac_key_secret, null
-      )
+      "clusterIssuers.acme.hmacKeySecret" = try(var.cluster_addons.cert_manager.acme_issuer.hmac_key_secret, null)
     }
     content {
       name  = set_sensitive.key
@@ -504,10 +496,8 @@ resource "helm_release" "longhorn" {
 
   dynamic "set_sensitive" {
     for_each = {
-      "longhorn.longhornUI.auth.adminPassword" = random_password.this.result
-      "longhorn.longhornManager.s3.secretAccessKey" = try(
-        var.cluster_addons.longhorn.s3_backup.secret_access_key, ""
-      )
+      "longhorn.longhornUI.auth.adminPassword"      = random_password.this.result
+      "longhorn.longhornManager.s3.secretAccessKey" = try(var.cluster_addons.longhorn.s3_backup.secret_access_key, "")
     }
     content {
       name  = set_sensitive.key
